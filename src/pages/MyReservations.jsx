@@ -4,6 +4,7 @@ import { QRCodeSVG } from "qrcode.react"
 import api from "../api/axios"
 import { useToast } from "../context/ToastContext"
 import { useLang } from "../context/LanguageContext"
+import TakoLoader from "../components/TakoLoader"
 
 const ACTIVE = ["pending", "approved", "offered"]
 
@@ -114,7 +115,12 @@ export default function MyReservations() {
         }
     }
 
-    if (loading) return <div className="container">{t("stalls.loading")}</div>
+    if (loading)
+        return (
+            <div className="container">
+                <TakoLoader size={64} label={t("stalls.loading")} />
+            </div>
+        )
 
     const hasFinished = list.some((r) => !ACTIVE.includes(r.status))
 
@@ -142,16 +148,10 @@ export default function MyReservations() {
                     const when = whenText(r)
 
                     return (
-                        <div key={r._id} className="card reservation">
-                            <div>
+                        <div key={r._id} className={`ticket-card ${r.status}`}>
+                            {/* main part of the ticket */}
+                            <div className="ticket-main">
                                 <h3>{r.shop?.name || "-"}</h3>
-
-                                {r.code && (
-                                    <p style={{ margin: "0 0 6px" }}>
-                                        {t("res.code")}:{" "}
-                                        <strong style={{ letterSpacing: 2, color: "var(--wine)" }}>{r.code}</strong>
-                                    </p>
-                                )}
 
                                 <p className="muted">
                                     {when ? `${when} · ` : ""}
@@ -210,56 +210,58 @@ export default function MyReservations() {
                                 {r.status === "completed" && r.shop?.stampRally && (
                                     <p style={{ margin: "8px 0 0" }}>🎉 {t("res.stampEarned")}</p>
                                 )}
+                            </div>
+
+                            {/* tear-off stub */}
+                            <div className="ticket-side">
+                                {r.code && (
+                                    <>
+                                        <span className="ticket-label">{t("res.code")}</span>
+                                        <strong className="ticket-code">{r.code}</strong>
+                                    </>
+                                )}
 
                                 {openQr === r._id && r.code && (
-                                    <div style={{ marginTop: 16 }}>
-                                        <div
-                                            style={{
-                                                display: "inline-block",
-                                                padding: 12,
-                                                background: "#fff",
-                                                border: "1px solid var(--border)",
-                                                borderRadius: 12,
-                                            }}
-                                        >
+                                    <div className="ticket-qr">
+                                        <div className="ticket-qr-box">
                                             <QRCodeSVG
                                                 value={`${window.location.origin}/ticket/${r.code}`}
-                                                size={160}
+                                                size={140}
                                                 fgColor="#681b36"
                                             />
                                         </div>
-                                        <p className="muted" style={{ margin: "8px 0 0" }}>{t("res.qrHint")}</p>
+                                        <p className="muted" style={{ margin: "6px 0 0" }}>{t("res.qrHint")}</p>
                                     </div>
                                 )}
-                            </div>
 
-                            <div className="card-actions">
-                                {r.code && (r.status === "pending" || r.status === "approved") && (
-                                    <button
-                                        className="btn outline small"
-                                        onClick={() => setOpenQr(openQr === r._id ? null : r._id)}
-                                    >
-                                        {openQr === r._id ? t("res.hideQr") : t("res.showQr")}
-                                    </button>
-                                )}
-                                {r.shop && (
-                                    <Link className="btn light small" to={`/shop/${r.shop._id}`}>
-                                        {r.status === "approved" || r.status === "completed"
-                                            ? t("res.review")
-                                            : t("res.view")}
-                                    </Link>
-                                )}
-                                {active ? (
-                                    r.status !== "offered" && (
-                                        <button className="btn danger small" onClick={() => handleCancel(r._id)}>
-                                            {t("res.cancel")}
+                                <div className="card-actions">
+                                    {r.code && (r.status === "pending" || r.status === "approved") && (
+                                        <button
+                                            className="btn outline small"
+                                            onClick={() => setOpenQr(openQr === r._id ? null : r._id)}
+                                        >
+                                            {openQr === r._id ? t("res.hideQr") : t("res.showQr")}
                                         </button>
-                                    )
-                                ) : (
-                                    <button className="btn danger small" onClick={() => handleDelete(r._id)}>
-                                        🗑 {t("res.delete")}
-                                    </button>
-                                )}
+                                    )}
+                                    {r.shop && (
+                                        <Link className="btn light small" to={`/shop/${r.shop._id}`}>
+                                            {r.status === "approved" || r.status === "completed"
+                                                ? t("res.review")
+                                                : t("res.view")}
+                                        </Link>
+                                    )}
+                                    {active ? (
+                                        r.status !== "offered" && (
+                                            <button className="btn danger small" onClick={() => handleCancel(r._id)}>
+                                                {t("res.cancel")}
+                                            </button>
+                                        )
+                                    ) : (
+                                        <button className="btn danger small" onClick={() => handleDelete(r._id)}>
+                                            🗑 {t("res.delete")}
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     )

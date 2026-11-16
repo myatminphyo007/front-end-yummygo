@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
 import { useLang } from "../context/LanguageContext"
 import StarRating from "../components/StarRating"
+import TakoLoader from "../components/TakoLoader"
 import mapLink from "../utils/mapLink"
 import { dateOnly, festivalRange, isEnded } from "../utils/festivalDates"
 
@@ -28,6 +29,9 @@ export default function ShopDetail() {
     const [people, setPeople] = useState(1)
     const [note, setNote] = useState("")
     const [bookError, setBookError] = useState("")
+
+    // popup after a successful booking
+    const [success, setSuccess] = useState(null)
 
     // food pre-order: { menuItemId: quantity }
     const [cart, setCart] = useState({})
@@ -85,6 +89,7 @@ export default function ShopDetail() {
 
         try {
             let data
+            let when = ""
 
             if (mode === "request") {
                 if (!reqDate || !reqTime) return setBookError(t("shop.chooseDateTime"))
@@ -98,9 +103,11 @@ export default function ShopDetail() {
                     items: orderItems,
                 })
                 data = res.data
+                when = `${reqDate} ${reqTime}`
             } else {
                 if (!slotId) return setBookError(t("shop.chooseSlot"))
 
+                const picked = slots.find((s) => s._id === slotId)
                 const res = await api.post("/reservations", {
                     slotId,
                     people: Number(people),
@@ -108,9 +115,10 @@ export default function ShopDetail() {
                     items: orderItems,
                 })
                 data = res.data
+                when = picked ? `${picked.date} ${picked.time}` : ""
             }
 
-            showToast(t("shop.sent", { code: data.code }))
+            setSuccess({ code: data.code, shopName: shop.name, when })
             setSlotId("")
             setReqDate("")
             setReqTime("")
@@ -136,7 +144,12 @@ export default function ShopDetail() {
         }
     }
 
-    if (loading) return <div className="container">{t("stalls.loading")}</div>
+    if (loading)
+        return (
+            <div className="container">
+                <TakoLoader size={64} label={t("stalls.loading")} />
+            </div>
+        )
     if (!shop) return <div className="container"><div className="empty">{t("shop.notFound")}</div></div>
 
     // the dates the visitor can ask for: inside the festival, and not in the past
@@ -466,6 +479,39 @@ export default function ShopDetail() {
             {zoomImg && (
                 <div className="lightbox" onClick={() => setZoomImg("")}>
                     <img src={zoomImg} alt="" />
+                </div>
+            )}
+
+            {/* booking sent */}
+            {success && (
+                <div className="success-overlay" onClick={() => setSuccess(null)}>
+                    <div className="success-card" onClick={(e) => e.stopPropagation()}>
+                        <div className="confetti" aria-hidden="true">
+                            {Array.from({ length: 16 }).map((_, i) => (
+                                <span key={i} style={{ "--i": i }}></span>
+                            ))}
+                        </div>
+
+                        <svg className="success-check" viewBox="0 0 52 52">
+                            <circle className="sc-circle" cx="26" cy="26" r="24" fill="none" />
+                            <path className="sc-tick" fill="none" d="M14 27 l8 8 l16 -17" />
+                        </svg>
+
+                        <h2>{t("success.title")}</h2>
+                        <p className="muted">
+                            {success.shopName}
+                            {success.when ? ` · ${success.when}` : ""}
+                        </p>
+                        {success.code && <p className="success-code">{success.code}</p>}
+                        <p className="muted">{t("success.sub")}</p>
+
+                        <div className="card-actions" style={{ justifyContent: "center", marginTop: 14 }}>
+                            <Link className="btn" to="/my-reservations">{t("success.view")}</Link>
+                            <button className="btn outline" type="button" onClick={() => setSuccess(null)}>
+                                {t("success.close")}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

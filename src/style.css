@@ -1204,3 +1204,145 @@ body.scrolled header {
     padding-bottom: unset !important;
     border-bottom-color: transparent !important;
 }
+
+/* ===== takoyaki loader ===== */
+.tako-loader { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 30px 0; }
+.tako-ball {
+    position: relative;
+    width: var(--s, 48px);
+    height: var(--s, 48px);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f6b66a, #d9822b 60%, #a9571a);
+    box-shadow: inset -4px -5px 8px rgba(90, 42, 18, 0.35);
+    animation: tako-bounce 0.7s ease-in-out infinite alternate;
+}
+.tako-ball i { position: absolute; top: 42%; width: 12%; height: 12%; border-radius: 50%; background: #2b1a12; }
+.tako-ball i:nth-child(1) { left: 28%; }
+.tako-ball i:nth-child(2) { right: 28%; }
+.tako-ball b {
+    position: absolute; left: 50%; top: 62%; width: 22%; height: 11%; margin-left: -11%;
+    border-bottom: 2.5px solid #2b1a12; border-radius: 0 0 50% 50%;
+}
+.tako-shadow {
+    width: calc(var(--s, 48px) * 0.8); height: 8px; border-radius: 50%;
+    background: rgba(139, 30, 63, 0.18);
+    animation: tako-shadow 0.7s ease-in-out infinite alternate;
+}
+.tako-loader span { color: var(--wine, #8b1e3f); font-weight: 600; }
+@keyframes tako-bounce {
+    from { transform: translateY(0) scale(1.05, 0.92); }
+    to   { transform: translateY(calc(var(--s, 48px) * -0.7)) scale(0.97, 1.04); }
+}
+@keyframes tako-shadow {
+    from { transform: scale(1); opacity: 0.5; }
+    to   { transform: scale(0.6); opacity: 0.2; }
+}
+
+/* ===== server waking banner ===== */
+.wake-banner {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+    z-index: 1500; display: flex; align-items: center; gap: 14px;
+    background: #fff; border: 1px solid #f3dfe5; border-radius: 18px;
+    padding: 10px 20px 10px 14px; max-width: min(92vw, 520px);
+    box-shadow: 0 14px 34px rgba(139, 30, 63, 0.22);
+    animation: wake-in 0.35s ease-out;
+}
+.wake-banner .tako-loader { padding: 26px 6px 0; gap: 3px; }
+.wake-banner strong { display: block; color: var(--wine, #8b1e3f); }
+.wake-banner span { font-size: 14px; color: #6b5560; }
+@keyframes wake-in {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ===== booking success popup ===== */
+.success-overlay {
+    position: fixed; inset: 0; z-index: 2000; padding: 20px;
+    background: rgba(40, 10, 25, 0.55); backdrop-filter: blur(3px);
+    display: flex; align-items: center; justify-content: center;
+    animation: fade-in 0.25s;
+}
+.success-card {
+    position: relative; width: 100%; max-width: 420px; text-align: center;
+    background: #fff; border-radius: 26px; padding: 34px 30px 28px;
+    animation: pop-in 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+.success-check { width: 92px; height: 92px; }
+.sc-circle {
+    stroke: #2fb27a; stroke-width: 3; stroke-dasharray: 151; stroke-dashoffset: 151;
+    transform: rotate(-90deg); transform-origin: 26px 26px;
+    animation: draw 0.6s ease-out 0.15s forwards;
+}
+.sc-tick {
+    stroke: #2fb27a; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 36; stroke-dashoffset: 36;
+    animation: draw 0.4s ease-out 0.65s forwards;
+}
+.success-code { font-size: 34px; font-weight: 800; letter-spacing: 5px; color: var(--wine, #8b1e3f); margin: 8px 0; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop-in {
+    from { opacity: 0; transform: scale(0.8) translateY(20px); }
+    to   { opacity: 1; transform: none; }
+}
+.confetti { position: absolute; top: 80px; left: 50%; width: 0; height: 0; pointer-events: none; }
+.confetti span {
+    position: absolute; width: 10px; height: 14px; border-radius: 3px;
+    background: #e8486b; opacity: 0;
+    animation: burst 1.1s ease-out 0.6s forwards;
+}
+.confetti span:nth-child(3n)   { background: #ffd166; }
+.confetti span:nth-child(3n+1) { background: #2fb27a; }
+.confetti span:nth-child(4n)   { background: #6ec1ff; }
+@keyframes burst {
+    0%   { opacity: 1; transform: rotate(calc(var(--i) * 22.5deg)) translateY(0) scale(1); }
+    100% { opacity: 0; transform: rotate(calc(var(--i) * 22.5deg)) translateY(-150px) scale(0.5); }
+}
+
+/* ===== ticket-style reservation card ===== */
+.ticket-card {
+    --c: #e8486b;
+    display: flex; position: relative; margin-bottom: 20px;
+    background: #fff; border: 1px solid #f3dfe5; border-left: 8px solid var(--c);
+    border-radius: 20px; box-shadow: 0 8px 24px rgba(139, 30, 63, 0.1);
+}
+.ticket-card.pending   { --c: #f2a33a; }
+.ticket-card.approved  { --c: #2fb27a; }
+.ticket-card.offered   { --c: #6ea8ff; }
+.ticket-card.completed { --c: #8b1e3f; }
+.ticket-card.noshow,
+.ticket-card.declined,
+.ticket-card.cancelled { --c: #b9a7ae; }
+.ticket-card.noshow, .ticket-card.declined, .ticket-card.cancelled { opacity: 0.8; }
+
+.ticket-main { flex: 1; min-width: 0; padding: 20px 24px; }
+.ticket-main h3 { margin: 0 0 6px; color: var(--wine, #8b1e3f); }
+
+.ticket-side {
+    position: relative; width: 230px; padding: 20px;
+    border-left: 2px dashed #e7c4cf;
+    display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center; text-align: center;
+}
+.ticket-side::before,
+.ticket-side::after {
+    content: ""; position: absolute; left: -13px; width: 24px; height: 24px;
+    border-radius: 50%; background: #fffaf6;
+}
+.ticket-side::before { top: -13px; }
+.ticket-side::after  { bottom: -13px; }
+.ticket-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #a08a93; }
+.ticket-code { font-size: 28px; letter-spacing: 4px; color: var(--wine, #8b1e3f); }
+.ticket-qr-box { display: inline-block; padding: 10px; background: #fff; border: 1px solid #f3dfe5; border-radius: 12px; }
+.ticket-side .card-actions { flex-direction: column; align-items: stretch; width: 100%; }
+
+@media (max-width: 700px) {
+    .ticket-card { flex-direction: column; }
+    .ticket-side { width: auto; border-left: none; border-top: 2px dashed #e7c4cf; }
+    .ticket-side::before { left: -13px; top: -13px; }
+    .ticket-side::after  { left: auto; right: -13px; top: -13px; bottom: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tako-ball, .tako-shadow, .wake-banner, .success-card, .confetti span { animation: none; }
+    .sc-circle, .sc-tick { animation: none; stroke-dashoffset: 0; }
+}

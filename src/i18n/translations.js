@@ -380,6 +380,13 @@ const translations = {
         "festival.back": "All festivals",
         "festival.notFound": "Festival not found",
         "festival.openMap": "Open in Google Maps",
+
+        "wake.title": "Waking up the server…",
+        "wake.text": "The free server sleeps when idle. It can take up to a minute, thank you for waiting! 🍡",
+        "success.title": "Request sent!",
+        "success.sub": "Waiting for the stall to confirm. We will notify you.",
+        "success.view": "View my reservations",
+        "success.close": "Close",
     },
 
     ja: {
@@ -764,6 +771,13 @@ const translations = {
         "festival.back": "お祭り一覧",
         "festival.notFound": "お祭りが見つかりません",
         "festival.openMap": "Googleマップで開く",
+
+        "wake.title": "サーバーを起こしています…",
+        "wake.text": "無料サーバーのため、起動に最大1分ほどかかることがあります。少しお待ちください 🍡",
+        "success.title": "送信しました！",
+        "success.sub": "屋台の確認をお待ちください。結果は通知でお知らせします。",
+        "success.view": "マイ予約を見る",
+        "success.close": "閉じる",
     },
 
     my: {
@@ -1146,6 +1160,12 @@ const translations = {
         "festival.back": "ပွဲတော်အားလုံး",
         "festival.notFound": "ပွဲတော် မတွေ့ပါ",
         "festival.openMap": "Google Maps တွင် ဖွင့်မည်",
+        "wake.title": "ဆာဗာကို နှိုးနေပါသည်…",
+        "wake.text": "အခမဲ့ဆာဗာဖြစ်၍ စတင်ရန် တစ်မိနစ်ခန့် ကြာနိုင်ပါသည်။ ခဏစောင့်ပေးပါ 🍡",
+        "success.title": "ပို့ပြီးပါပြီ!",
+        "success.sub": "ဆိုင်က အတည်ပြုသည်အထိ စောင့်ပါ။ အကြောင်းကြားပါမည်။",
+        "success.view": "ကျွန်ုပ်၏ ကြိုတင်မှာယူမှုများ ကြည့်ရန်",
+        "success.close": "ပိတ်ရန်",
     },
 
     ko: {
@@ -1527,6 +1547,12 @@ const translations = {
         "festival.back": "모든 축제",
         "festival.notFound": "축제를 찾을 수 없어요",
         "festival.openMap": "구글 지도에서 열기",
+        "wake.title": "서버를 깨우는 중…",
+        "wake.text": "무료 서버라 시작하는 데 최대 1분 정도 걸릴 수 있어요. 잠시만 기다려 주세요 🍡",
+        "success.title": "전송했어요!",
+        "success.sub": "포장마차의 확인을 기다려 주세요. 결과는 알림으로 알려드려요.",
+        "success.view": "내 예약 보기",
+        "success.close": "닫기",
     },
 }
 
