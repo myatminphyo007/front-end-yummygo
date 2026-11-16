@@ -373,6 +373,12 @@ const translations = {
         "noti.booking.offerDeclined": "{name} declined your suggested time {date} {time}",
         "noti.booking.offerExpired": "The suggested time at {shop} ({date} {time}) expired",
         "noti.booking.offerExpiredOwner": "No answer in time: booking {code} ({date} {time}) was cancelled",
+
+        "home.festivals": "Festivals",
+        "home.noFestivals": "No festivals yet",
+        "festival.stalls": "stalls",
+        "festival.back": "All festivals",
+        "festival.notFound": "Festival not found",
     },
 
     ja: {
@@ -751,6 +757,11 @@ const translations = {
         "noti.booking.offerDeclined": "{name}さんが提案した時間 {date} {time} を断りました",
         "noti.booking.offerExpired": "{shop}の提案時間（{date} {time}）は期限切れになりました",
         "noti.booking.offerExpiredOwner": "回答がなかったため、予約 {code}（{date} {time}）はキャンセルされました",
+        "home.festivals": "お祭り",
+        "home.noFestivals": "まだお祭りがありません",
+        "festival.stalls": "屋台",
+        "festival.back": "お祭り一覧",
+        "festival.notFound": "お祭りが見つかりません",
     },
 
     my: {
@@ -1127,6 +1138,11 @@ const translations = {
         "noti.booking.offerDeclined": "{name} က သင်အဆိုပြုသည့် အချိန် {date} {time} ကို ငြင်းပယ်လိုက်သည်",
         "noti.booking.offerExpired": "{shop} ၏ အဆိုပြုအချိန် ({date} {time}) သက်တမ်းကုန်သွားပါပြီ",
         "noti.booking.offerExpiredOwner": "အချိန်မီ မဖြေသဖြင့် ကြိုတင်မှာယူမှု {code} ({date} {time}) ကို ပယ်ဖျက်လိုက်သည်",
+        "home.festivals": "ပွဲတော်များ",
+        "home.noFestivals": "ပွဲတော် မရှိသေးပါ",
+        "festival.stalls": "ဆိုင်",
+        "festival.back": "ပွဲတော်အားလုံး",
+        "festival.notFound": "ပွဲတော် မတွေ့ပါ",
     },
 
     ko: {
@@ -1502,6 +1518,11 @@ const translations = {
         "noti.booking.offerDeclined": "{name}님이 제안한 시간 {date} {time}을(를) 거절했습니다",
         "noti.booking.offerExpired": "{shop}의 제안 시간({date} {time})이 만료되었습니다",
         "noti.booking.offerExpiredOwner": "시간 내 답변이 없어 예약 {code}({date} {time})이(가) 취소되었습니다",
+        "home.festivals": "축제",
+        "home.noFestivals": "아직 축제가 없어요",
+        "festival.stalls": "개 포장마차",
+        "festival.back": "모든 축제",
+        "festival.notFound": "축제를 찾을 수 없어요",
     },
 }
 

@@ -14,6 +14,7 @@ import OwnerDashboard from "./pages/OwnerDashboard"
 import Admin from "./pages/Admin"
 import Ticket from "./pages/Ticket"
 import Stats from "./pages/Stats"
+import FestivalPage from "./pages/FestivalPage"
 
 export default function App() {
     return (
@@ -23,6 +24,7 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/stalls" element={<Stalls />} />
+                    <Route path="/festival/:id" element={<FestivalPage />} />
                     <Route path="/shop/:id" element={<ShopDetail />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
