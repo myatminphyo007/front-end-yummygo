@@ -19,6 +19,8 @@ import Stats from "./pages/Stats"
 import FestivalPage from "./pages/FestivalPage"
 
 export default function App() {
+    useEffect(() => initFx(), [])
+
     return (
         <>
             <Navbar />
@@ -88,7 +90,6 @@ export default function App() {
                         }
                     />
                 </Routes>
-                
             </main>
             <Footer />
         </>
