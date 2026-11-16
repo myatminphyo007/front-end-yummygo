@@ -3,11 +3,15 @@ import { Link, useNavigate } from "react-router-dom"
 import api from "../api/axios"
 import { useLang } from "../context/LanguageContext"
 import { dateOnly } from "../utils/festivalDates"
+import { RING } from "../utils/season"
+import useSeason from "../utils/useSeason"
 import SkeletonGrid from "../components/Skeleton"
+import SeasonFX from "../components/SeasonFX"
 
 export default function Home() {
     const navigate = useNavigate()
     const { t } = useLang()
+    const { season } = useSeason()
     const [search, setSearch] = useState("")
     const [festivals, setFestivals] = useState([])
     const [counts, setCounts] = useState({})
@@ -47,19 +51,7 @@ export default function Home() {
     return (
         <>
             <section className="hero">
-                <div className="petals" aria-hidden="true">
-                    {Array.from({ length: 14 }).map((_, i) => (
-                        <span
-                            key={i}
-                            style={{
-                                left: `${(i * 37) % 100}%`,
-                                "--s": `${10 + ((i * 5) % 14)}px`,
-                                "--d": `${9 + ((i * 3) % 7)}s`,
-                                "--delay": `${-(i * 1.3)}s`,
-                            }}
-                        />
-                    ))}
-                </div>
+                <SeasonFX season={season} />
 
                 <div className="hero-content">
                     <span className="eyebrow">{t("home.eyebrow")}</span>
@@ -80,8 +72,8 @@ export default function Home() {
                 <div className="hero-3d" aria-hidden="true">
                     <div className="hero-ball"></div>
                     <div className="hero-ring">
-                        {["🍡", "🍢", "🍙", "🥟", "🍜", "🐙"].map((e, i) => (
-                            <div className="ring-item" key={i} style={{ "--a": `${i * 60}deg` }}>
+                        {RING[season].map((e, i) => (
+                            <div className="ring-item" key={season + i} style={{ "--a": `${i * 60}deg` }}>
                                 <span>{e}</span>
                             </div>
                         ))}

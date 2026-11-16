@@ -387,6 +387,11 @@ const translations = {
         "success.sub": "Waiting for the stall to confirm. We will notify you.",
         "success.view": "View my reservations",
         "success.close": "Close",
+        "season.auto": "Season: Auto",
+        "season.spring": "Season: Spring",
+        "season.summer": "Season: Summer",
+        "season.autumn": "Season: Autumn",
+        "season.winter": "Season: Winter",
     },
 
     ja: {
@@ -778,6 +783,11 @@ const translations = {
         "success.sub": "屋台の確認をお待ちください。結果は通知でお知らせします。",
         "success.view": "マイ予約を見る",
         "success.close": "閉じる",
+        "season.auto": "季節：自動",
+        "season.spring": "季節：春",
+        "season.summer": "季節：夏",
+        "season.autumn": "季節：秋",
+        "season.winter": "季節：冬",
     },
 
     my: {
@@ -1166,6 +1176,11 @@ const translations = {
         "success.sub": "ဆိုင်က အတည်ပြုသည်အထိ စောင့်ပါ။ အကြောင်းကြားပါမည်။",
         "success.view": "ကျွန်ုပ်၏ ကြိုတင်မှာယူမှုများ ကြည့်ရန်",
         "success.close": "ပိတ်ရန်",
+        "season.auto": "ရာသီ - အလိုအလျောက်",
+        "season.spring": "ရာသီ - နွေဦး",
+        "season.summer": "ရာသီ - နွေ",
+        "season.autumn": "ရာသီ - ဆောင်းဦး",
+        "season.winter": "ရာသီ - ဆောင်း",
     },
 
     ko: {
@@ -1553,6 +1568,12 @@ const translations = {
         "success.sub": "포장마차의 확인을 기다려 주세요. 결과는 알림으로 알려드려요.",
         "success.view": "내 예약 보기",
         "success.close": "닫기",
+
+        "season.auto": "계절: 자동",
+        "season.spring": "계절: 봄",
+        "season.summer": "계절: 여름",
+        "season.autumn": "계절: 가을",
+        "season.winter": "계절: 겨울",
     },
 }
 

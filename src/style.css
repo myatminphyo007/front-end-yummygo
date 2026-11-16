@@ -1346,3 +1346,109 @@ body.scrolled header {
     .tako-ball, .tako-shadow, .wake-banner, .success-card, .confetti span { animation: none; }
     .sc-circle, .sc-tick { animation: none; stroke-dashoffset: 0; }
 }
+
+/* ===== seasons ===== */
+:root {
+    --hero-rgb: 255, 240, 244;
+    --hero-glow: #e7a7b8;
+}
+:root[data-season="spring"] {
+    --rose: #df7189; --pink: #f7d6df; --blush: #fff0f3; --cream: #fffbf7; --border: #efdce1;
+    --hero-rgb: 255, 240, 244; --hero-glow: #e7a7b8;
+}
+:root[data-season="summer"] {
+    --rose: #ff7a6b; --pink: #cfeefa; --blush: #eaf8fd; --cream: #fbfeff; --border: #d5ebf3;
+    --hero-rgb: 230, 247, 253; --hero-glow: #8fd3ef;
+}
+:root[data-season="autumn"] {
+    --rose: #e0833a; --pink: #fbe0c4; --blush: #fff3e6; --cream: #fffaf2; --border: #f0dcc6;
+    --hero-rgb: 255, 241, 224; --hero-glow: #f0a95f;
+}
+:root[data-season="winter"] {
+    --rose: #6f9fd8; --pink: #d9e8f8; --blush: #eef5fd; --cream: #f8fbff; --border: #d7e3f1;
+    --hero-rgb: 234, 242, 252; --hero-glow: #a9c8ee;
+}
+
+body { transition: background-color 0.6s; }
+
+.hero {
+    background:
+        linear-gradient(90deg, rgb(var(--hero-rgb)) 20%, rgba(var(--hero-rgb), 0.8) 65%, rgba(var(--hero-rgb), 0.45)),
+        radial-gradient(circle at 85% 35%, var(--hero-glow), transparent 40%);
+}
+
+/* the logo always keeps the Yummy Go colors */
+.logo { color: #922d4b; }
+.logo span { color: #df7189; }
+
+/* season button */
+.season-btn {
+    position: relative; display: grid; place-items: center;
+    width: 44px; height: 44px; padding: 0;
+    border: 1px solid var(--border); border-radius: 50%;
+    background: #fff; font-size: 20px;
+    transition: background 0.2s, transform 0.2s;
+}
+.season-btn:hover { background: var(--blush); transform: rotate(12deg) scale(1.05); }
+.season-btn i {
+    position: absolute; right: -3px; bottom: -3px;
+    min-width: 16px; height: 16px; border-radius: 8px;
+    background: #922d4b; color: #fff;
+    font-size: 10px; font-style: normal; font-weight: 800; line-height: 16px; text-align: center;
+}
+.season-icon { display: inline-block; animation: season-pop 0.4s cubic-bezier(0.2, 1.5, 0.4, 1); }
+@keyframes season-pop {
+    from { transform: scale(0.3) rotate(-90deg); opacity: 0; }
+    to   { transform: none; opacity: 1; }
+}
+
+/* autumn leaves */
+.fx-autumn span {
+    background: linear-gradient(135deg, #f4a03d, #c8452b);
+    border-radius: 0 100% 0 100%;
+    opacity: 0.85;
+}
+
+/* winter snow */
+.fx-winter span {
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0.9;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.95);
+    animation: snow-fall var(--d) linear var(--delay) infinite;
+}
+@keyframes snow-fall {
+    0%   { transform: translate3d(0, -30px, 0); }
+    50%  { transform: translate3d(30px, 450px, 0); }
+    100% { transform: translate3d(-20px, 900px, 0); }
+}
+
+/* summer fireflies and little fireworks */
+.fx-summer span {
+    border-radius: 50%;
+    background: #ffe27a;
+    box-shadow: 0 0 12px 4px rgba(255, 226, 122, 0.8);
+    opacity: 0;
+    animation: firefly var(--d) ease-in-out var(--delay) infinite;
+}
+@keyframes firefly {
+    0%   { opacity: 0; transform: translate(0, 0); }
+    25%  { opacity: 1; }
+    50%  { opacity: 0.4; transform: translate(var(--dx, 40px), -40px); }
+    75%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(calc(var(--dx, 40px) * -1), -80px); }
+}
+.fx-summer .boom {
+    position: absolute; width: 12px; height: 12px; border-radius: 50%;
+    border: 3px solid #ffb347; opacity: 0;
+    animation: boom 3.6s ease-out var(--delay) infinite;
+}
+@keyframes boom {
+    0%   { transform: scale(0.2); opacity: 0; }
+    10%  { opacity: 0.9; }
+    100% { transform: scale(14); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fx-winter span, .fx-summer span, .fx-summer .boom, .season-icon { animation: none; }
+}

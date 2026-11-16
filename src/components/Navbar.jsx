@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { useLang } from "../context/LanguageContext"
 import LanguageSwitcher from "./LanguageSwitcher"
+import SeasonSwitcher from "./SeasonSwitcher"
 import NotificationBell from "./NotificationBell"
 
 export default function Navbar() {
@@ -37,11 +38,12 @@ export default function Navbar() {
                 {user?.role === "customer" && <Link to="/stamps">🏅 {t("nav.stamps")}</Link>}
                 {user?.role === "owner" && <Link to="/owner">{t("nav.owner")}</Link>}
                 {user?.role === "admin" && <Link to="/admin">{t("nav.admin")}</Link>}
-                
+
                 {user?.role === "owner" && <Link to="/stats">📊 {t("nav.stats")}</Link>}
             </nav>
 
             <div id="authNav">
+                <SeasonSwitcher />
                 <LanguageSwitcher />
 
                 {user && user.role !== "admin" && <NotificationBell />}
