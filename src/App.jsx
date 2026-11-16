@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom"
+import { useEffect } from "react"
+import initFx from "./utils/fx"
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
 import ProtectedRoute from "./components/ProtectedRoute"

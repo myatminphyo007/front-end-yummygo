@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import api from "../api/axios"
 import { useLang } from "../context/LanguageContext"
 import { dateOnly } from "../utils/festivalDates"
+import SkeletonGrid from "../components/Skeleton"
 
 export default function Home() {
     const navigate = useNavigate()
@@ -46,6 +47,20 @@ export default function Home() {
     return (
         <>
             <section className="hero">
+                <div className="petals" aria-hidden="true">
+                    {Array.from({ length: 14 }).map((_, i) => (
+                        <span
+                            key={i}
+                            style={{
+                                left: `${(i * 37) % 100}%`,
+                                "--s": `${10 + ((i * 5) % 14)}px`,
+                                "--d": `${9 + ((i * 3) % 7)}s`,
+                                "--delay": `${-(i * 1.3)}s`,
+                            }}
+                        />
+                    ))}
+                </div>
+
                 <div className="hero-content">
                     <span className="eyebrow">{t("home.eyebrow")}</span>
                     <h1>{t("home.title")}</h1>
@@ -104,7 +119,7 @@ export default function Home() {
                 </div>
 
                 {loading ? (
-                    <p>{t("stalls.loading")}</p>
+                    <SkeletonGrid />
                 ) : festivals.length === 0 ? (
                     <div className="empty">{t("home.noFestivals")}</div>
                 ) : (
