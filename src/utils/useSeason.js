@@ -18,13 +18,17 @@ export default function useSeason() {
         document.documentElement.dataset.season = season
     }, [season])
 
-    // Auto -> spring -> summer -> autumn -> winter -> Auto
-    const cycle = () => {
-        const order = ["auto", ...SEASONS]
-        const next = order[(order.indexOf(choice) + 1) % order.length]
-        saveChoice(next)
+    // pick one: "auto", "spring", "summer", "autumn" or "winter"
+    const choose = (value) => {
+        saveChoice(value)
         window.dispatchEvent(new Event("season:change"))
     }
 
-    return { choice, season, cycle }
+    // Auto -> spring -> summer -> autumn -> winter -> Auto
+    const cycle = () => {
+        const order = ["auto", ...SEASONS]
+        choose(order[(order.indexOf(choice) + 1) % order.length])
+    }
+
+    return { choice, season, choose, cycle }
 }

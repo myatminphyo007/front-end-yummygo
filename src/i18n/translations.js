@@ -392,6 +392,11 @@ const translations = {
         "season.summer": "Season: Summer",
         "season.autumn": "Season: Autumn",
         "season.winter": "Season: Winter",
+        "season.opt.auto": "Auto",
+        "season.opt.spring": "Spring",
+        "season.opt.summer": "Summer",
+        "season.opt.autumn": "Autumn",
+        "season.opt.winter": "Winter",
     },
 
     ja: {
@@ -788,6 +793,12 @@ const translations = {
         "season.summer": "季節：夏",
         "season.autumn": "季節：秋",
         "season.winter": "季節：冬",
+
+        "season.opt.auto": "自動",
+        "season.opt.spring": "春",
+        "season.opt.summer": "夏",
+        "season.opt.autumn": "秋",
+        "season.opt.winter": "冬",
     },
 
     my: {
@@ -1181,6 +1192,12 @@ const translations = {
         "season.summer": "ရာသီ - နွေ",
         "season.autumn": "ရာသီ - ဆောင်းဦး",
         "season.winter": "ရာသီ - ဆောင်း",
+
+        "season.opt.auto": "အလိုအလျောက်",
+        "season.opt.spring": "နွေဦး",
+        "season.opt.summer": "နွေ",
+        "season.opt.autumn": "ဆောင်းဦး",
+        "season.opt.winter": "ဆောင်း",
     },
 
     ko: {
@@ -1574,6 +1591,11 @@ const translations = {
         "season.summer": "계절: 여름",
         "season.autumn": "계절: 가을",
         "season.winter": "계절: 겨울",
+        "season.opt.auto": "자동",
+        "season.opt.spring": "봄",
+        "season.opt.summer": "여름",
+        "season.opt.autumn": "가을",
+        "season.opt.winter": "겨울",
     },
 }
 
