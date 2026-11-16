@@ -379,6 +379,7 @@ const translations = {
         "festival.stalls": "stalls",
         "festival.back": "All festivals",
         "festival.notFound": "Festival not found",
+        "festival.openMap": "Open in Google Maps",
     },
 
     ja: {
@@ -762,6 +763,7 @@ const translations = {
         "festival.stalls": "屋台",
         "festival.back": "お祭り一覧",
         "festival.notFound": "お祭りが見つかりません",
+        "festival.openMap": "Googleマップで開く",
     },
 
     my: {
@@ -1143,6 +1145,7 @@ const translations = {
         "festival.stalls": "ဆိုင်",
         "festival.back": "ပွဲတော်အားလုံး",
         "festival.notFound": "ပွဲတော် မတွေ့ပါ",
+        "festival.openMap": "Google Maps တွင် ဖွင့်မည်",
     },
 
     ko: {
@@ -1523,6 +1526,7 @@ const translations = {
         "festival.stalls": "개 포장마차",
         "festival.back": "모든 축제",
         "festival.notFound": "축제를 찾을 수 없어요",
+        "festival.openMap": "구글 지도에서 열기",
     },
 }
 

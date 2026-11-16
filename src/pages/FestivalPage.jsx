@@ -1,9 +1,18 @@
-    import { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import api from "../api/axios"
 import { useLang } from "../context/LanguageContext"
 import ShopCard from "../components/ShopCard"
+import SkeletonGrid from "../components/Skeleton"
 import { dateOnly } from "../utils/festivalDates"
+
+// link, address or place name -> Google Maps link
+const festivalMapUrl = (festival) => {
+    const loc = (festival.mapLocation || "").trim()
+    if (/^https?:\/\//i.test(loc)) return loc
+    const query = loc || `${festival.name} ${festival.place}`.trim()
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+}
 
 export default function FestivalPage() {
     const { id } = useParams()
@@ -26,7 +35,7 @@ export default function FestivalPage() {
             .finally(() => setLoading(false))
     }, [id])
 
-    if (loading) return <div className="container"><p>{t("stalls.loading")}</p></div>
+    if (loading) return <div className="container"><SkeletonGrid /></div>
     if (notFound || !festival)
         return (
             <div className="container">
@@ -57,6 +66,16 @@ export default function FestivalPage() {
                     📅 {dateOnly(festival.startDate)} - {dateOnly(festival.endDate)}
                 </p>
                 {festival.description && <p>{festival.description}</p>}
+
+                <a
+                    className="btn outline small"
+                    href={festivalMapUrl(festival)}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ marginTop: 8, display: "inline-block" }}
+                >
+                    📍 {t("festival.openMap")}
+                </a>
             </div>
 
             <div className="section-title" style={{ marginTop: 30 }}>
