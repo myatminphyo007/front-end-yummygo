@@ -1193,3 +1193,14 @@ body.scrolled .navbar {
     padding-top: 8px;
     padding-bottom: 8px;
 }
+/* navbar back to normal */
+body.scrolled .navbar,
+body.scrolled header {
+    background: #fff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: 0 2px 12px rgba(139, 30, 63, 0.08) !important;
+    padding-top: unset !important;
+    padding-bottom: unset !important;
+    border-bottom-color: transparent !important;
+}
