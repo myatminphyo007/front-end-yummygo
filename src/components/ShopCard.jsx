@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom"
 import { useLang } from "../context/LanguageContext"
 import mapLink from "../utils/mapLink"
+import { festivalRange, isEnded } from "../utils/festivalDates"
 import StarRating from "./StarRating"
 
 export default function ShopCard({ shop }) {
     const { t } = useLang()
+    const range = festivalRange(shop.festival)
+    const ended = isEnded(shop.festival)
 
     return (
         <div className="card">
@@ -30,6 +33,13 @@ export default function ShopCard({ shop }) {
                         </>
                     )}
                 </p>
+
+                {range && (
+                    <p className="muted" style={{ margin: "0 0 8px" }}>
+                        📅 {range}{" "}
+                        {ended && <span className="status cancelled">{t("shop.festivalEnded")}</span>}
+                    </p>
+                )}
 
                 {shop.stampRally && (
                     <p style={{ margin: "0 0 8px" }}>

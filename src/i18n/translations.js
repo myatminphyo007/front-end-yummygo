@@ -343,6 +343,7 @@ const translations = {
         "noti.coupon.used": "Your coupon at {shop} was used: {reward}",
         "menu.changePhoto": "Photo",
         "menu.photoUpdated": "Photo updated",
+        "shop.festivalEnded": "Festival ended",
 
     },
 
@@ -691,6 +692,7 @@ const translations = {
 
         "menu.changePhoto": "写真",
         "menu.photoUpdated": "写真を更新しました",
+        "shop.festivalEnded": "開催終了",
     },
 
     my: {
@@ -1037,6 +1039,7 @@ const translations = {
 
         "menu.changePhoto": "ဓာတ်ပုံ",
         "menu.photoUpdated": "ဓာတ်ပုံကို ပြင်ပြီးပါပြီ",
+        "shop.festivalEnded": "ပွဲတော် ပြီးဆုံးပါပြီ",
     },
 
     ko: {
@@ -1382,6 +1385,7 @@ const translations = {
         "noti.coupon.used": "{shop} 쿠폰을 사용했습니다: {reward}",
         "menu.changePhoto": "사진",
         "menu.photoUpdated": "사진을 수정했습니다",
+        "shop.festivalEnded": "축제 종료",
     },
 }
 
