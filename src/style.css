@@ -945,3 +945,43 @@ a.stamp:hover { transform: translateY(-3px); }
 }
 .menu-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .menu-thumb.zoomable { cursor: zoom-in; }
+
+/* ---------- Time requests and suggestions ---------- */
+.status.offered { background: #fff3d6; color: #8a5a00; }
+
+.link-btn {
+  display: block;
+  margin: 4px 0 14px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--wine);
+  font-weight: 700;
+  text-align: left;
+}
+.link-btn:hover { text-decoration: underline; }
+
+.request-box {
+  margin-bottom: 10px;
+  padding: 14px;
+  background: var(--blush);
+  border-radius: 12px;
+}
+
+.offer-box {
+  margin-top: 14px;
+  padding: 14px;
+  border: 2px solid #f0c36d;
+  border-radius: 12px;
+  background: #fffaf0;
+}
+.offer-new { margin: 4px 0 8px; font-size: 20px; font-weight: 800; color: var(--wine); }
+
+.suggest-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+.suggest-row input { width: auto; margin: 0; }

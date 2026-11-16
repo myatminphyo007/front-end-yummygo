@@ -1,10 +1,18 @@
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import api from "../api/axios"
 import { useToast } from "../context/ToastContext"
 import { useLang } from "../context/LanguageContext"
 
-const FILTERS = ["pending", "approved", "completed", "noshow", "declined", "cancelled", "all"]
+const FILTERS = ["pending", "offered", "approved", "completed", "noshow", "declined", "cancelled", "all"]
+const OPEN = ["pending", "approved", "offered"]
+
+// the time of a reservation: the new fields first, then the old slot
+const whenText = (r) => {
+    if (r.date) return `${r.date} ${r.time}`
+    if (r.slot) return `${r.slot.date} ${r.slot.time}`
+    return "-"
+}
 
 export default function RequestManager() {
     const { showToast } = useToast()
@@ -13,6 +21,11 @@ export default function RequestManager() {
     const [list, setList] = useState([])
     const [filter, setFilter] = useState("pending")
     const [code, setCode] = useState("")
+
+    // suggest another time
+    const [suggestId, setSuggestId] = useState(null)
+    const [sDate, setSDate] = useState("")
+    const [sTime, setSTime] = useState("")
 
     const load = () => api.get("/reservations/shop").then((res) => setList(res.data))
 
@@ -27,6 +40,26 @@ export default function RequestManager() {
             load()
         } catch (err) {
             showToast(err.response?.data?.message || "Could not update")
+        }
+    }
+
+    const openSuggest = (r) => {
+        setSuggestId(r._id)
+        setSDate(r.date || r.slot?.date || "")
+        setSTime(r.time || r.slot?.time || "")
+    }
+
+    const sendSuggest = async (e) => {
+        e.preventDefault()
+        if (!sDate || !sTime) return
+
+        try {
+            await api.put(`/reservations/${suggestId}/suggest`, { date: sDate, time: sTime })
+            showToast(t("req.suggestSent"))
+            setSuggestId(null)
+            load()
+        } catch (err) {
+            showToast(err.response?.data?.message || "Could not send")
         }
     }
 
@@ -76,7 +109,7 @@ export default function RequestManager() {
 
     const visible = filter === "all" ? list : list.filter((r) => r.status === filter)
     const pendingCount = list.filter((r) => r.status === "pending").length
-    const hasFinished = list.some((r) => !["pending", "approved"].includes(r.status))
+    const hasFinished = list.some((r) => !OPEN.includes(r.status))
 
     return (
         <>
@@ -131,62 +164,110 @@ export default function RequestManager() {
                         </thead>
                         <tbody>
                             {visible.map((r) => {
-                                const finished = !["pending", "approved"].includes(r.status)
+                                const finished = !OPEN.includes(r.status)
 
                                 return (
-                                    <tr key={r._id}>
-                                        <td>{r.user?.name}</td>
-                                        <td>
-                                            <strong>{r.code}</strong>
-                                        </td>
-                                        <td>{r.slot ? `${r.slot.date} ${r.slot.time}` : "-"}</td>
-                                        <td>{r.people}</td>
-                                        <td>
-                                            {r.items?.length > 0 ? (
-                                                <>
-                                                    {r.items.map((i) => (
-                                                        <div key={i._id}>
-                                                            {i.name} × {i.quantity}
-                                                        </div>
-                                                    ))}
-                                                    <strong>¥{r.total.toLocaleString()}</strong>
-                                                </>
-                                            ) : (
-                                                "-"
-                                            )}
-                                        </td>
-                                        <td>{r.note}</td>
-                                        <td>
-                                            <span className={`status ${r.status}`}>{t(`status.${r.status}`)}</span>
-                                        </td>
-                                        <td>
-                                            {r.status === "pending" && (
-                                                <div className="card-actions">
-                                                    <button className="btn small" onClick={() => setStatus(r._id, "approved")}>
-                                                        {t("req.approve")}
+                                    <Fragment key={r._id}>
+                                        <tr>
+                                            <td>{r.user?.name}</td>
+                                            <td>
+                                                <strong>{r.code}</strong>
+                                            </td>
+                                            <td>
+                                                {whenText(r)}
+                                                {r.status === "offered" && (
+                                                    <div className="muted">
+                                                        → {t("req.offeredTime", { date: r.offerDate, time: r.offerTime })}
+                                                    </div>
+                                                )}
+                                            </td>
+                                            <td>{r.people}</td>
+                                            <td>
+                                                {r.items?.length > 0 ? (
+                                                    <>
+                                                        {r.items.map((i) => (
+                                                            <div key={i._id}>
+                                                                {i.name} × {i.quantity}
+                                                            </div>
+                                                        ))}
+                                                        <strong>¥{r.total.toLocaleString()}</strong>
+                                                    </>
+                                                ) : (
+                                                    "-"
+                                                )}
+                                            </td>
+                                            <td>{r.note}</td>
+                                            <td>
+                                                <span className={`status ${r.status}`}>{t(`status.${r.status}`)}</span>
+                                            </td>
+                                            <td>
+                                                {r.status === "pending" && (
+                                                    <div className="card-actions">
+                                                        <button className="btn small" onClick={() => setStatus(r._id, "approved")}>
+                                                            {t("req.approve")}
+                                                        </button>
+                                                        <button className="btn light small" onClick={() => openSuggest(r)}>
+                                                            🕐 {t("req.suggest")}
+                                                        </button>
+                                                        <button className="btn danger small" onClick={() => setStatus(r._id, "declined")}>
+                                                            {t("req.reject")}
+                                                        </button>
+                                                    </div>
+                                                )}
+                                                {r.status === "offered" && (
+                                                    <span className="muted">{t("req.waitingAnswer")}</span>
+                                                )}
+                                                {r.status === "approved" && (
+                                                    <div className="card-actions">
+                                                        <button className="btn small" onClick={() => checkIn(r._id, "completed")}>
+                                                            ✓ {t("req.arrived")}
+                                                        </button>
+                                                        <button className="btn danger small" onClick={() => checkIn(r._id, "noshow")}>
+                                                            ✗ {t("req.noshow")}
+                                                        </button>
+                                                    </div>
+                                                )}
+                                                {finished && (
+                                                    <button className="btn danger small" onClick={() => handleDelete(r._id)}>
+                                                        🗑 {t("req.delete")}
                                                     </button>
-                                                    <button className="btn danger small" onClick={() => setStatus(r._id, "declined")}>
-                                                        {t("req.reject")}
-                                                    </button>
-                                                </div>
-                                            )}
-                                            {r.status === "approved" && (
-                                                <div className="card-actions">
-                                                    <button className="btn small" onClick={() => checkIn(r._id, "completed")}>
-                                                        ✓ {t("req.arrived")}
-                                                    </button>
-                                                    <button className="btn danger small" onClick={() => checkIn(r._id, "noshow")}>
-                                                        ✗ {t("req.noshow")}
-                                                    </button>
-                                                </div>
-                                            )}
-                                            {finished && (
-                                                <button className="btn danger small" onClick={() => handleDelete(r._id)}>
-                                                    🗑 {t("req.delete")}
-                                                </button>
-                                            )}
-                                        </td>
-                                    </tr>
+                                                )}
+                                            </td>
+                                        </tr>
+
+                                        {suggestId === r._id && (
+                                            <tr>
+                                                <td colSpan="8">
+                                                    <form className="suggest-row" onSubmit={sendSuggest}>
+                                                        <strong>🕐 {t("req.suggest")}</strong>
+                                                        <input
+                                                            type="date"
+                                                            value={sDate}
+                                                            onChange={(e) => setSDate(e.target.value)}
+                                                            required
+                                                        />
+                                                        <input
+                                                            type="time"
+                                                            value={sTime}
+                                                            onChange={(e) => setSTime(e.target.value)}
+                                                            required
+                                                        />
+                                                        <button className="btn small" type="submit">
+                                                            {t("req.suggestSend")}
+                                                        </button>
+                                                        <button
+                                                            className="btn outline small"
+                                                            type="button"
+                                                            onClick={() => setSuggestId(null)}
+                                                        >
+                                                            {t("req.suggestCancel")}
+                                                        </button>
+                                                        <span className="muted">{t("req.suggestHint", { minutes: 15 })}</span>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </Fragment>
                                 )
                             })}
                         </tbody>

@@ -5,6 +5,8 @@ import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
 import { useLang } from "../context/LanguageContext"
 import StarRating from "../components/StarRating"
+import mapLink from "../utils/mapLink"
+import { dateOnly, festivalRange, isEnded } from "../utils/festivalDates"
 
 export default function ShopDetail() {
     const { id } = useParams()
@@ -19,7 +21,10 @@ export default function ShopDetail() {
     const [loading, setLoading] = useState(true)
 
     // reservation form
+    const [mode, setMode] = useState("slot")
     const [slotId, setSlotId] = useState("")
+    const [reqDate, setReqDate] = useState("")
+    const [reqTime, setReqTime] = useState("")
     const [people, setPeople] = useState(1)
     const [note, setNote] = useState("")
     const [bookError, setBookError] = useState("")
@@ -72,20 +77,43 @@ export default function ShopDetail() {
         .map((m) => ({ ...m, quantity: cart[m._id] }))
     const orderTotal = cartLines.reduce((sum, m) => sum + m.price * m.quantity, 0)
 
+    const orderItems = cartLines.map((m) => ({ menuItemId: m._id, quantity: m.quantity }))
+
     const handleReserve = async (e) => {
         e.preventDefault()
         setBookError("")
-        if (!slotId) return setBookError(t("shop.chooseSlot"))
 
         try {
-            const { data } = await api.post("/reservations", {
-                slotId,
-                people: Number(people),
-                note,
-                items: cartLines.map((m) => ({ menuItemId: m._id, quantity: m.quantity })),
-            })
+            let data
+
+            if (mode === "request") {
+                if (!reqDate || !reqTime) return setBookError(t("shop.chooseDateTime"))
+
+                const res = await api.post("/reservations/request", {
+                    shopId: id,
+                    date: reqDate,
+                    time: reqTime,
+                    people: Number(people),
+                    note,
+                    items: orderItems,
+                })
+                data = res.data
+            } else {
+                if (!slotId) return setBookError(t("shop.chooseSlot"))
+
+                const res = await api.post("/reservations", {
+                    slotId,
+                    people: Number(people),
+                    note,
+                    items: orderItems,
+                })
+                data = res.data
+            }
+
             showToast(t("shop.sent", { code: data.code }))
             setSlotId("")
+            setReqDate("")
+            setReqTime("")
             setNote("")
             setCart({})
             loadAll()
@@ -111,6 +139,15 @@ export default function ShopDetail() {
     if (loading) return <div className="container">{t("stalls.loading")}</div>
     if (!shop) return <div className="container"><div className="empty">{t("shop.notFound")}</div></div>
 
+    // the dates the visitor can ask for: inside the festival, and not in the past
+    const today = new Date().toLocaleDateString("sv-SE")
+    const festStart = dateOnly(shop.festival?.startDate)
+    const festEnd = dateOnly(shop.festival?.endDate)
+    const minDate = festStart && festStart > today ? festStart : today
+    const maxDate = festEnd || ""
+    const range = festivalRange(shop.festival)
+    const ended = isEnded(shop.festival)
+
     return (
         <div className="container">
             <div className="detail-layout">
@@ -125,6 +162,26 @@ export default function ShopDetail() {
                         <p className="muted">
                             {shop.category} · {shop.festival?.name} ({shop.festival?.place})
                         </p>
+
+                        {range && (
+                            <p className="muted" style={{ margin: "0 0 8px" }}>
+                                📅 {range}{" "}
+                                {ended && <span className="status cancelled">{t("shop.festivalEnded")}</span>}
+                            </p>
+                        )}
+
+                        {shop.festival?.mapLocation && (
+                            <p>
+                                <a
+                                    className="btn light small"
+                                    href={mapLink(shop.festival.mapLocation)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    📍 {t("shop.openMap")}
+                                </a>
+                            </p>
+                        )}
 
                         {shop.stampRally && (
                             <p>
@@ -280,24 +337,83 @@ export default function ShopDetail() {
                         <form onSubmit={handleReserve}>
                             {bookError && <p className="error-text">{bookError}</p>}
 
-                            {slots.length === 0 ? (
-                                <p className="muted">{t("shop.noSlots")}</p>
-                            ) : (
-                                <div className="slots">
-                                    {slots.map((s) => (
+                            {mode === "slot" ? (
+                                <>
+                                    {slots.length === 0 ? (
+                                        <p className="muted">{t("shop.noSlots")}</p>
+                                    ) : (
+                                        <div className="slots">
+                                            {slots.map((s) => (
+                                                <button
+                                                    type="button"
+                                                    key={s._id}
+                                                    className={`slot ${slotId === s._id ? "active" : ""}`}
+                                                    disabled={s.full}
+                                                    onClick={() => setSlotId(s._id)}
+                                                >
+                                                    {s.date}
+                                                    <br />
+                                                    {s.time}
+                                                    <small>{s.full ? t("shop.full") : t("shop.left", { n: s.remaining })}</small>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {!ended && (
                                         <button
                                             type="button"
-                                            key={s._id}
-                                            className={`slot ${slotId === s._id ? "active" : ""}`}
-                                            disabled={s.full}
-                                            onClick={() => setSlotId(s._id)}
+                                            className="link-btn"
+                                            onClick={() => {
+                                                setMode("request")
+                                                setBookError("")
+                                            }}
                                         >
-                                            {s.date}
-                                            <br />
-                                            {s.time}
-                                            <small>{s.full ? t("shop.full") : t("shop.left", { n: s.remaining })}</small>
+                                            🕐 {t("shop.requestTime")}
                                         </button>
-                                    ))}
+                                    )}
+                                </>
+                            ) : (
+                                <div className="request-box">
+                                    <p className="muted" style={{ margin: "0 0 10px" }}>{t("shop.requestHint")}</p>
+                                    {range && (
+                                        <p style={{ margin: "0 0 10px" }}>
+                                            📅 {t("shop.festivalDays", { range })}
+                                        </p>
+                                    )}
+
+                                    <label>
+                                        {t("shop.date")}
+                                        <input
+                                            type="date"
+                                            value={reqDate}
+                                            min={minDate}
+                                            max={maxDate || undefined}
+                                            onChange={(e) => setReqDate(e.target.value)}
+                                            required
+                                        />
+                                    </label>
+
+                                    <label>
+                                        {t("shop.time")}
+                                        <input
+                                            type="time"
+                                            value={reqTime}
+                                            onChange={(e) => setReqTime(e.target.value)}
+                                            required
+                                        />
+                                    </label>
+
+                                    <button
+                                        type="button"
+                                        className="link-btn"
+                                        onClick={() => {
+                                            setMode("slot")
+                                            setBookError("")
+                                        }}
+                                    >
+                                        ← {t("shop.backToSlots")}
+                                    </button>
                                 </div>
                             )}
 
@@ -339,7 +455,7 @@ export default function ShopDetail() {
                             </label>
 
                             <button className="btn" type="submit" style={{ width: "100%" }}>
-                                {t("shop.send")}
+                                {mode === "request" ? t("shop.sendRequest") : t("shop.send")}
                             </button>
                         </form>
                     )}

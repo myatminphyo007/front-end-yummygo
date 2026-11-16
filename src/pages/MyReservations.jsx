@@ -5,6 +5,38 @@ import api from "../api/axios"
 import { useToast } from "../context/ToastContext"
 import { useLang } from "../context/LanguageContext"
 
+const ACTIVE = ["pending", "approved", "offered"]
+
+// the time of a reservation: the new fields first, then the old slot
+const whenText = (r) => {
+    if (r.date) return `${r.date} ${r.time}`
+    if (r.slot) return `${r.slot.date} ${r.slot.time}`
+    return ""
+}
+
+// counts down to the moment the suggestion expires
+function Countdown({ until, onDone }) {
+    const [left, setLeft] = useState(() => new Date(until).getTime() - Date.now())
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            const ms = new Date(until).getTime() - Date.now()
+            setLeft(ms)
+            if (ms <= 0) {
+                clearInterval(timer)
+                onDone()
+            }
+        }, 1000)
+        return () => clearInterval(timer)
+    }, [until])
+
+    const total = Math.max(0, Math.floor(left / 1000))
+    const mm = String(Math.floor(total / 60)).padStart(2, "0")
+    const ss = String(total % 60).padStart(2, "0")
+
+    return <strong>{mm}:{ss}</strong>
+}
+
 export default function MyReservations() {
     const { showToast } = useToast()
     const { t } = useLang()
@@ -36,6 +68,28 @@ export default function MyReservations() {
         }
     }
 
+    const handleAccept = async (id) => {
+        try {
+            await api.put(`/reservations/${id}/accept`)
+            showToast(t("res.offerAccepted"))
+            load()
+        } catch (err) {
+            showToast(err.response?.data?.message || "Could not accept")
+            load()
+        }
+    }
+
+    const handleDeclineOffer = async (id) => {
+        try {
+            await api.put(`/reservations/${id}/decline-offer`)
+            showToast(t("res.offerDeclined"))
+            load()
+        } catch (err) {
+            showToast(err.response?.data?.message || "Could not decline")
+            load()
+        }
+    }
+
     const handleDelete = async (id) => {
         if (!window.confirm(t("res.confirmDelete"))) return
 
@@ -62,7 +116,7 @@ export default function MyReservations() {
 
     if (loading) return <div className="container">{t("stalls.loading")}</div>
 
-    const hasFinished = list.some((r) => !["pending", "approved"].includes(r.status))
+    const hasFinished = list.some((r) => !ACTIVE.includes(r.status))
 
     return (
         <div className="container">
@@ -84,7 +138,8 @@ export default function MyReservations() {
                 <div className="empty">{t("res.none")}</div>
             ) : (
                 list.map((r) => {
-                    const active = r.status === "pending" || r.status === "approved"
+                    const active = ACTIVE.includes(r.status)
+                    const when = whenText(r)
 
                     return (
                         <div key={r._id} className="card reservation">
@@ -99,7 +154,7 @@ export default function MyReservations() {
                                 )}
 
                                 <p className="muted">
-                                    {r.slot ? `${r.slot.date} · ${r.slot.time} · ` : ""}
+                                    {when ? `${when} · ` : ""}
                                     {r.people} {r.people === 1 ? t("res.person") : t("res.people")}
                                 </p>
                                 {r.note && <p className="muted">{t("res.note")}: {r.note}</p>}
@@ -123,6 +178,34 @@ export default function MyReservations() {
                                 <div style={{ marginTop: 10 }}>
                                     <span className={`status ${r.status}`}>{t(`status.${r.status}`)}</span>
                                 </div>
+
+                                {/* the stall suggested another time */}
+                                {r.status === "offered" && (
+                                    <div className="offer-box">
+                                        <strong>🕐 {t("res.offerTitle")}</strong>
+                                        <p style={{ margin: "6px 0 0" }}>
+                                            {t("res.offerRequested", { date: r.date, time: r.time })}
+                                        </p>
+                                        <p className="offer-new">
+                                            {t("res.offerBody", { date: r.offerDate, time: r.offerTime })}
+                                        </p>
+                                        <p style={{ margin: "0 0 10px" }}>
+                                            {t("res.offerLeft")}{" "}
+                                            <Countdown until={r.offerExpiresAt} onDone={load} />
+                                        </p>
+                                        <div className="card-actions">
+                                            <button className="btn small" onClick={() => handleAccept(r._id)}>
+                                                ✓ {t("res.accept")}
+                                            </button>
+                                            <button
+                                                className="btn danger small"
+                                                onClick={() => handleDeclineOffer(r._id)}
+                                            >
+                                                ✗ {t("res.declineOffer")}
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {r.status === "completed" && r.shop?.stampRally && (
                                     <p style={{ margin: "8px 0 0" }}>🎉 {t("res.stampEarned")}</p>
@@ -151,7 +234,7 @@ export default function MyReservations() {
                             </div>
 
                             <div className="card-actions">
-                                {r.code && active && (
+                                {r.code && (r.status === "pending" || r.status === "approved") && (
                                     <button
                                         className="btn outline small"
                                         onClick={() => setOpenQr(openQr === r._id ? null : r._id)}
@@ -167,9 +250,11 @@ export default function MyReservations() {
                                     </Link>
                                 )}
                                 {active ? (
-                                    <button className="btn danger small" onClick={() => handleCancel(r._id)}>
-                                        {t("res.cancel")}
-                                    </button>
+                                    r.status !== "offered" && (
+                                        <button className="btn danger small" onClick={() => handleCancel(r._id)}>
+                                            {t("res.cancel")}
+                                        </button>
+                                    )
                                 ) : (
                                     <button className="btn danger small" onClick={() => handleDelete(r._id)}>
                                         🗑 {t("res.delete")}

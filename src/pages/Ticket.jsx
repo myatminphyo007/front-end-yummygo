@@ -57,7 +57,11 @@ export default function Ticket() {
                     </p>
                     <p>
                         <strong>{t("req.datetime")}:</strong>{" "}
-                        {reservation.slot ? `${reservation.slot.date} ${reservation.slot.time}` : "-"}
+                                                {reservation.date
+                            ? `${reservation.date} ${reservation.time}`
+                            : reservation.slot
+                              ? `${reservation.slot.date} ${reservation.slot.time}`
+                              : "-"}
                     </p>
                     <p>
                         <strong>{t("req.people")}:</strong> {reservation.people}
