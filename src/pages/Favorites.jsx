@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import api from "../api/axios"
 import ShopCard from "../components/ShopCard"
-import { SkeletonGrid } from "../components/Skeleton"
+import SkeletonGrid from "../components/Skeleton"
 import useFavorites from "../utils/useFavorites"
 import { useLang } from "../context/LanguageContext"
 
