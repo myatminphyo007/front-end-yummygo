@@ -73,7 +73,7 @@ export default function Home() {
                     <div className="hero-ball"></div>
                     <div className="hero-ring">
                         {RING[season].map((e, i) => (
-                            <div className="ring-item" key={season + i} style={{ "--a": `${i * 60}deg` }}>
+                            <div className="ring-item" key={i} style={{ "--a": `${i * 60}deg` }}>
                                 <span>{e}</span>
                             </div>
                         ))}
