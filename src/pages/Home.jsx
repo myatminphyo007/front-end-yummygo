@@ -60,6 +60,18 @@ export default function Home() {
                         <button className="btn" type="submit">{t("home.search")}</button>
                     </form>
                 </div>
+
+                {/* 3D animation */}
+                <div className="hero-3d" aria-hidden="true">
+                    <div className="hero-ball"></div>
+                    <div className="hero-ring">
+                        {["🍡", "🍢", "🍙", "🥟", "🍜", "🐙"].map((e, i) => (
+                            <div className="ring-item" key={i} style={{ "--a": `${i * 60}deg` }}>
+                                <span>{e}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </section>
 
             <div className="container">
