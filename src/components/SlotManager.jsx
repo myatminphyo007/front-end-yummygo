@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import api from "../api/axios"
 import { useToast } from "../context/ToastContext"
 import { useLang } from "../context/LanguageContext"
+import { dateOnly } from "../utils/festivalDates"
 
 export default function SlotManager({ shop }) {
     const { showToast } = useToast()
@@ -9,6 +10,10 @@ export default function SlotManager({ shop }) {
     const [slots, setSlots] = useState([])
     const [form, setForm] = useState({ date: "", time: "", capacity: 4 })
     const [error, setError] = useState("")
+
+    // festival days (empty string = no limit, the server still checks)
+    const minDate = dateOnly(shop?.festival?.startDate)
+    const maxDate = dateOnly(shop?.festival?.endDate)
 
     const load = () => api.get(`/slots/shop/${shop._id}`).then((res) => setSlots(res.data))
 
@@ -46,12 +51,26 @@ export default function SlotManager({ shop }) {
                 <h2>{t("slot.title")}</h2>
             </div>
 
+            {minDate && maxDate && (
+                <p className="muted" style={{ marginBottom: 10 }}>
+                    📅 {minDate} - {maxDate}
+                </p>
+            )}
+
             <form className="panel inline-form" onSubmit={handleAdd}>
                 {error && <p className="error-text full">{error}</p>}
 
                 <label>
                     {t("slot.date")}
-                    <input type="date" name="date" value={form.date} onChange={handleChange} required />
+                    <input
+                        type="date"
+                        name="date"
+                        value={form.date}
+                        onChange={handleChange}
+                        min={minDate || undefined}
+                        max={maxDate || undefined}
+                        required
+                    />
                 </label>
 
                 <label>
