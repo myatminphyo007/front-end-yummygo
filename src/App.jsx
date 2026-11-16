@@ -18,7 +18,7 @@ import Admin from "./pages/Admin"
 import Ticket from "./pages/Ticket"
 import Stats from "./pages/Stats"
 import FestivalPage from "./pages/FestivalPage"
-
+import Favorites from "./pages/Favorites"
 export default function App() {
     useEffect(() => initFx(), [])
 
@@ -92,6 +92,7 @@ export default function App() {
                         }
                     />
                 </Routes>
+                <Route path="/favorites" element={<Favorites />} />
             </main>
             <Footer />
         </>

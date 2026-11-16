@@ -2,13 +2,17 @@ import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { useLang } from "../context/LanguageContext"
+import useFavorites from "../utils/useFavorites"
 import LanguageSwitcher from "./LanguageSwitcher"
 import SeasonSwitcher from "./SeasonSwitcher"
 import NotificationBell from "./NotificationBell"
+import ThemeToggle from "./ThemeToggle"
+import Icon from "./Icon"
 
 export default function Navbar() {
     const { user, logout } = useAuth()
     const { t } = useLang()
+    const { ids } = useFavorites()
     const [open, setOpen] = useState(false)
     const menuRef = useRef(null)
 
@@ -35,14 +39,27 @@ export default function Navbar() {
                 <Link to="/">{t("nav.home")}</Link>
                 <Link to="/stalls">{t("nav.stalls")}</Link>
                 {user?.role === "customer" && <Link to="/my-reservations">{t("nav.myReservations")}</Link>}
-                {user?.role === "customer" && <Link to="/stamps">🏅 {t("nav.stamps")}</Link>}
+                {user?.role === "customer" && (
+                    <Link className="nav-ico" to="/stamps">
+                        <Icon name="medal" size={16} /> {t("nav.stamps")}
+                    </Link>
+                )}
                 {user?.role === "owner" && <Link to="/owner">{t("nav.owner")}</Link>}
                 {user?.role === "admin" && <Link to="/admin">{t("nav.admin")}</Link>}
 
-                {user?.role === "owner" && <Link to="/stats">📊 {t("nav.stats")}</Link>}
+                {user?.role === "owner" && (
+                    <Link className="nav-ico" to="/stats">
+                        <Icon name="chart" size={16} /> {t("nav.stats")}
+                    </Link>
+                )}
             </nav>
 
             <div id="authNav">
+                <Link to="/favorites" className="season-btn fav-link" title={t("fav.title")}>
+                    <Icon name="heart" size={18} />
+                    {ids.length > 0 && <em className="fav-count">{ids.length}</em>}
+                </Link>
+                <ThemeToggle />
                 <SeasonSwitcher />
                 <LanguageSwitcher />
 

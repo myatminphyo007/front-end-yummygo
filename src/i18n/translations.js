@@ -397,6 +397,10 @@ const translations = {
         "season.opt.summer": "Summer",
         "season.opt.autumn": "Autumn",
         "season.opt.winter": "Winter",
+        "fav.title": "My favorites",
+        "fav.empty": "No favorites yet. Tap the heart on a stall you like.",
+        "fav.add": "Add to favorites",
+        "fav.remove": "Remove from favorites",
     },
 
     ja: {
@@ -799,6 +803,10 @@ const translations = {
         "season.opt.summer": "夏",
         "season.opt.autumn": "秋",
         "season.opt.winter": "冬",
+        "fav.title": "お気に入り",
+        "fav.empty": "まだお気に入りがありません。気に入った屋台のハートを押してね。",
+        "fav.add": "お気に入りに追加",
+        "fav.remove": "お気に入りから削除",
     },
 
     my: {
@@ -1198,6 +1206,11 @@ const translations = {
         "season.opt.summer": "နွေ",
         "season.opt.autumn": "ဆောင်းဦး",
         "season.opt.winter": "ဆောင်း",
+
+        "fav.title": "အကြိုက်ဆုံးများ",
+        "fav.empty": "မကြိုက်ထားသေးပါ။ ကြိုက်သောဆိုင်ရှိ နှလုံးကို နှိပ်ပါ။",
+        "fav.add": "အကြိုက်ထဲထည့်ရန်",
+        "fav.remove": "အကြိုက်မှဖယ်ရန်",
     },
 
     ko: {
@@ -1596,6 +1609,10 @@ const translations = {
         "season.opt.summer": "여름",
         "season.opt.autumn": "가을",
         "season.opt.winter": "겨울",
+        "fav.title": "즐겨찾기",
+        "fav.empty": "아직 즐겨찾기가 없어요. 마음에 드는 가게의 하트를 눌러보세요.",
+        "fav.add": "즐겨찾기에 추가",
+        "fav.remove": "즐겨찾기에서 삭제",
     },
 }
 
