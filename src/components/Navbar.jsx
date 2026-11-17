@@ -6,7 +6,6 @@ import useFavorites from "../utils/useFavorites"
 import LanguageSwitcher from "./LanguageSwitcher"
 import SeasonSwitcher from "./SeasonSwitcher"
 import NotificationBell from "./NotificationBell"
-import ThemeToggle from "./ThemeToggle"
 import Icon from "./Icon"
 
 export default function Navbar() {
@@ -59,7 +58,6 @@ export default function Navbar() {
                     <Icon name="heart" size={18} />
                     {ids.length > 0 && <em className="fav-count">{ids.length}</em>}
                 </Link>
-                <ThemeToggle />
                 <SeasonSwitcher />
                 <LanguageSwitcher />
 
