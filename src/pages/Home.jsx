@@ -7,6 +7,8 @@ import { RING } from "../utils/season"
 import useSeason from "../utils/useSeason"
 import SkeletonGrid from "../components/Skeleton"
 import SeasonFX from "../components/SeasonFX"
+import Lanterns from "../components/Lanterns"
+import Icon from "../components/Icon"
 
 export default function Home() {
     const navigate = useNavigate()
@@ -47,10 +49,18 @@ export default function Home() {
     }
 
     const today = new Date().toLocaleDateString("sv-SE")
+    const solo = festivals.length === 1 // one festival: show one wide card
 
     return (
         <>
             <section className="hero">
+                {/* soft wave at the bottom of the hero */}
+                <div className="hero-wave" aria-hidden="true">
+                    <svg viewBox="0 0 1440 72" preserveAspectRatio="none">
+                        <path d="M0 40 C 240 80 480 0 760 34 C 1040 68 1240 70 1440 22 L1440 72 L0 72 Z" />
+                    </svg>
+                </div>
+
                 <SeasonFX season={season} />
 
                 <div className="hero-content">
@@ -81,68 +91,80 @@ export default function Home() {
                 </div>
             </section>
 
-            <div className="container">
-                <div className="features">
-                    <div className="feature">
-                        <div className="emoji">🍢</div>
-                        <h3>{t("home.f1Title")}</h3>
-                        <p>{t("home.f1Text")}</p>
-                    </div>
-                    <div className="feature">
-                        <div className="emoji">⏰</div>
-                        <h3>{t("home.f2Title")}</h3>
-                        <p>{t("home.f2Text")}</p>
-                    </div>
-                    <div className="feature">
-                        <div className="emoji">✅</div>
-                        <h3>{t("home.f3Title")}</h3>
-                        <p>{t("home.f3Text")}</p>
-                    </div>
-                    <div className="feature">
-                        <div className="emoji">⭐</div>
-                        <h3>{t("home.f4Title")}</h3>
-                        <p>{t("home.f4Text")}</p>
-                    </div>
-                </div>
+            <div className="home-body">
+                {/* floating color blobs */}
+                <span className="blob b1" aria-hidden="true"></span>
+                <span className="blob b2" aria-hidden="true"></span>
+                <span className="blob b3" aria-hidden="true"></span>
 
-                <div className="section-title" style={{ marginTop: 40 }}>
-                    <h2>{t("home.festivals")}</h2>
-                    <Link className="btn outline small" to="/stalls">{t("home.seeAll")}</Link>
-                </div>
-
-                {loading ? (
-                    <SkeletonGrid />
-                ) : festivals.length === 0 ? (
-                    <div className="empty">{t("home.noFestivals")}</div>
-                ) : (
-                    <div className="grid">
-                        {festivals.map((f) => {
-                            const ended = dateOnly(f.endDate) < today
-                            return (
-                                <Link
-                                    key={f._id}
-                                    to={`/festival/${f._id}`}
-                                    className={`festival-card ${ended ? "ended" : ""}`}
-                                >
-                                    <div className="festival-cover">
-                                        {f.image ? <img src={f.image} alt={f.name} /> : <span>🎪</span>}
-                                        {ended && <em className="festival-ended">{t("shop.festivalEnded")}</em>}
-                                    </div>
-                                    <div className="festival-body">
-                                        <h3>{f.name}</h3>
-                                        <p className="muted">📍 {f.place}</p>
-                                        <p className="muted">
-                                            📅 {dateOnly(f.startDate)} - {dateOnly(f.endDate)}
-                                        </p>
-                                        <p className="festival-count">
-                                            🍢 {counts[f._id] || 0} {t("festival.stalls")}
-                                        </p>
-                                    </div>
-                                </Link>
-                            )
-                        })}
+                <div className="container">
+                    <div className="features">
+                        <div className="feature">
+                            <div className="emoji">🍢</div>
+                            <h3>{t("home.f1Title")}</h3>
+                            <p>{t("home.f1Text")}</p>
+                        </div>
+                        <div className="feature">
+                            <div className="emoji">⏰</div>
+                            <h3>{t("home.f2Title")}</h3>
+                            <p>{t("home.f2Text")}</p>
+                        </div>
+                        <div className="feature">
+                            <div className="emoji">✅</div>
+                            <h3>{t("home.f3Title")}</h3>
+                            <p>{t("home.f3Text")}</p>
+                        </div>
+                        <div className="feature">
+                            <div className="emoji">⭐</div>
+                            <h3>{t("home.f4Title")}</h3>
+                            <p>{t("home.f4Text")}</p>
+                        </div>
                     </div>
-                )}
+
+                    <Lanterns />
+
+                    <div className="section-title" style={{ marginTop: 40 }}>
+                        <h2>{t("home.festivals")}</h2>
+                        <Link className="btn outline small" to="/stalls">{t("home.seeAll")}</Link>
+                    </div>
+
+                    {loading ? (
+                        <SkeletonGrid />
+                    ) : festivals.length === 0 ? (
+                        <div className="empty">{t("home.noFestivals")}</div>
+                    ) : (
+                        <div className={`grid ${solo ? "solo-grid" : ""}`}>
+                            {festivals.map((f) => {
+                                const ended = dateOnly(f.endDate) < today
+                                return (
+                                    <Link
+                                        key={f._id}
+                                        to={`/festival/${f._id}`}
+                                        className={`festival-card ${ended ? "ended" : ""} ${solo ? "solo" : ""}`}
+                                    >
+                                        <div className="festival-cover">
+                                            {f.image ? <img src={f.image} alt={f.name} /> : <span>🎪</span>}
+                                            {ended && <em className="festival-ended">{t("shop.festivalEnded")}</em>}
+                                        </div>
+                                        <div className="festival-body">
+                                            <h3>{f.name}</h3>
+                                            <p className="muted">
+                                                <Icon name="pin" size={15} /> {f.place}
+                                            </p>
+                                            <p className="muted">
+                                                <Icon name="calendar" size={15} /> {dateOnly(f.startDate)} - {dateOnly(f.endDate)}
+                                            </p>
+                                            <p className="festival-count">
+                                                🍢 {counts[f._id] || 0} {t("festival.stalls")}
+                                            </p>
+                                        </div>
+                                        {solo && <span className="festival-go" aria-hidden="true">→</span>}
+                                    </Link>
+                                )
+                            })}
+                        </div>
+                    )}
+                </div>
             </div>
         </>
     )
