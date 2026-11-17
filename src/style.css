@@ -1931,9 +1931,14 @@ footer.site-footer {
 @media (prefers-reduced-motion: reduce) { .stats-empty img { animation: none; } }
 
 
-/* fix navbar flicker: padding must NOT change when scrolled */
+/* navbar: shrinks on scroll, but page height never changes (no flicker) */
+.navbar {
+    transition: padding 0.25s ease, box-shadow 0.25s ease, margin 0.25s ease !important;
+}
 body.scrolled .navbar,
 body.scrolled header {
-    padding-top: 14px !important;
-    padding-bottom: 14px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 12px !important;   /* 6px + 6px lost, given back */
+    box-shadow: 0 6px 20px rgba(139, 30, 63, 0.12) !important;
 }
