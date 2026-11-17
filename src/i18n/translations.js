@@ -413,6 +413,11 @@ const translations = {
         "pf.nameEmpty": "Please enter a name",
         "pf.notImage": "Please choose an image file",
         "pf.failed": "Could not save. Please try again.",
+
+        "rv.addPhotos": "Add photos",
+        "rv.photoHint": "Optional. Up to 3 photos.",
+        "rv.photoLimit": "You can add up to 3 photos.",
+        "rv.notImage": "Please choose image files only.",
     },
 
     ja: {
@@ -830,6 +835,11 @@ const translations = {
         "pf.nameEmpty": "名前を入力してください",
         "pf.notImage": "画像ファイルを選んでください",
         "pf.failed": "保存できませんでした。もう一度お試しください。",
+
+        "rv.addPhotos": "写真を追加",
+        "rv.photoHint": "任意。最大3枚まで。",
+        "rv.photoLimit": "写真は最大3枚までです。",
+        "rv.notImage": "画像ファイルのみ選んでください。",
     },
 
     my: {
@@ -1246,6 +1256,10 @@ const translations = {
         "pf.nameEmpty": "အမည် ထည့်ပါ",
         "pf.notImage": "ပုံဖိုင် ရွေးပါ",
         "pf.failed": "သိမ်း၍မရပါ။ ထပ်ကြိုးစားပါ။",
+        "rv.addPhotos": "ဓာတ်ပုံ ထည့်ရန်",
+        "rv.photoHint": "ရွေးချယ်စရာ။ အများဆုံး ၃ ပုံ။",
+        "rv.photoLimit": "ဓာတ်ပုံ ၃ ပုံအထိသာ ထည့်နိုင်ပါသည်။",
+        "rv.notImage": "ပုံဖိုင်များကိုသာ ရွေးပါ။",
     },
 
     ko: {
@@ -1659,6 +1673,11 @@ const translations = {
         "pf.nameEmpty": "이름을 입력하세요",
         "pf.notImage": "이미지 파일을 선택하세요",
         "pf.failed": "저장하지 못했습니다. 다시 시도해 주세요.",
+
+        "rv.addPhotos": "사진 추가",
+        "rv.photoHint": "선택 사항. 최대 3장.",
+        "rv.photoLimit": "사진은 최대 3장까지 추가할 수 있어요.",
+        "rv.notImage": "이미지 파일만 선택해 주세요.",
     },
 }
 

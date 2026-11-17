@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import api from "../api/axios"
 import { useAuth } from "../context/AuthContext"
@@ -6,8 +6,11 @@ import { useToast } from "../context/ToastContext"
 import { useLang } from "../context/LanguageContext"
 import StarRating from "../components/StarRating"
 import TakoLoader from "../components/TakoLoader"
+import Icon from "../components/Icon"
 import mapLink from "../utils/mapLink"
 import { dateOnly, festivalRange, isEnded } from "../utils/festivalDates"
+
+const MAX_REVIEW_PHOTOS = 3
 
 export default function ShopDetail() {
     const { id } = useParams()
@@ -40,8 +43,11 @@ export default function ShopDetail() {
     const [rating, setRating] = useState(5)
     const [comment, setComment] = useState("")
     const [reviewError, setReviewError] = useState("")
+    const [reviewFiles, setReviewFiles] = useState([]) // [{ file, url }]
+    const [posting, setPosting] = useState(false)
+    const photoInput = useRef(null)
 
-    // enlarged photo (location photo or food photo)
+    // enlarged photo (location photo, food photo or review photo)
     const [zoomImg, setZoomImg] = useState("")
 
     const isCustomer = user?.role === "customer"
@@ -130,17 +136,52 @@ export default function ShopDetail() {
         }
     }
 
+    // choose photos for the review (up to 3)
+    const pickReviewPhotos = (e) => {
+        const chosen = Array.from(e.target.files || [])
+        e.target.value = "" // so the same photo can be chosen again
+        if (chosen.length === 0) return
+
+        const images = chosen.filter((f) => f.type.startsWith("image/"))
+        const room = MAX_REVIEW_PHOTOS - reviewFiles.length
+
+        if (images.length < chosen.length) setReviewError(t("rv.notImage"))
+        else if (images.length > room) setReviewError(t("rv.photoLimit"))
+        else setReviewError("")
+
+        const add = images.slice(0, room).map((file) => ({ file, url: URL.createObjectURL(file) }))
+        setReviewFiles((prev) => [...prev, ...add])
+    }
+
+    const removeReviewPhoto = (index) => {
+        setReviewFiles((prev) => {
+            URL.revokeObjectURL(prev[index].url)
+            return prev.filter((_, i) => i !== index)
+        })
+    }
+
     const handleReview = async (e) => {
         e.preventDefault()
         setReviewError("")
+        setPosting(true)
 
         try {
-            await api.post("/reviews", { shopId: id, rating: Number(rating), comment })
+            const fd = new FormData()
+            fd.append("shopId", id)
+            fd.append("rating", String(Number(rating)))
+            fd.append("comment", comment)
+            reviewFiles.forEach((p) => fd.append("photos", p.file))
+
+            await api.post("/reviews", fd)
             showToast(t("shop.reviewThanks"))
             setComment("")
+            reviewFiles.forEach((p) => URL.revokeObjectURL(p.url))
+            setReviewFiles([])
             loadAll()
         } catch (err) {
             setReviewError(err.response?.data?.message || "Could not post review")
+        } finally {
+            setPosting(false)
         }
     }
 
@@ -297,6 +338,19 @@ export default function ShopDetail() {
                                     </div>
                                     <div className="muted">{new Date(r.createdAt).toLocaleDateString()}</div>
                                     {r.comment && <p>{r.comment}</p>}
+
+                                    {r.photos?.length > 0 && (
+                                        <div className="review-photos">
+                                            {r.photos.map((url) => (
+                                                <img
+                                                    key={url}
+                                                    src={url}
+                                                    alt={t("shop.reviews")}
+                                                    onClick={() => setZoomImg(url)}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             ))
                         )}
@@ -326,7 +380,41 @@ export default function ShopDetail() {
                                     />
                                 </label>
 
-                                <button className="btn" type="submit">{t("shop.postReview")}</button>
+                                {/* photos (optional, up to 3) */}
+                                <input
+                                    ref={photoInput}
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={pickReviewPhotos}
+                                    style={{ display: "none" }}
+                                />
+                                <button
+                                    type="button"
+                                    className="rv-add"
+                                    onClick={() => photoInput.current?.click()}
+                                    disabled={reviewFiles.length >= MAX_REVIEW_PHOTOS}
+                                >
+                                    <Icon name="camera" size={18} /> {t("rv.addPhotos")}
+                                </button>
+                                <p className="rv-hint">{t("rv.photoHint")}</p>
+
+                                {reviewFiles.length > 0 && (
+                                    <div className="rv-previews">
+                                        {reviewFiles.map((p, i) => (
+                                            <div key={p.url} className="rv-thumb">
+                                                <img src={p.url} alt="" />
+                                                <button type="button" onClick={() => removeReviewPhoto(i)} aria-label="remove">
+                                                    ×
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <button className="btn" type="submit" disabled={posting}>
+                                    {posting ? t("pf.saving") : t("shop.postReview")}
+                                </button>
                                 <p className="muted">{t("shop.reviewNote")}</p>
                             </form>
                         )}
