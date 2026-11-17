@@ -1746,3 +1746,14 @@ footer.site-footer {
 .footer-links a:hover { color: var(--rose); opacity: 1; transform: translateY(-1px); }
 .site-footer .footer-tag { margin: 0; color: var(--wine); opacity: 0.85; }
 .site-footer .footer-copy { margin: 14px 0 0; font-size: 13px; color: var(--text); opacity: 0.6; }
+
+/* season menu on phones: full-width card under the navbar */
+@media (max-width: 760px) {
+    .season-menu { position: static; }
+    .season-pop {
+        left: 12px; right: 12px; top: 100%;
+        padding-top: 6px; transform-origin: top center;
+    }
+    .season-card { min-width: 0; width: 100%; box-sizing: border-box; }
+    .season-opt { padding: 14px 14px; font-size: 16px; }
+}
