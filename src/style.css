@@ -1857,3 +1857,31 @@ footer.site-footer {
     .logo-mark { display: block; }
 }
 .footer-logo { display: block; height: 58px; width: auto; margin: 0 auto 6px; }
+
+/* ===== mascot stamps ===== */
+.stamps-h { display: flex; align-items: center; gap: 8px; margin-top: 30px; color: var(--wine); }
+.stamps-h .icon { color: var(--rose); }
+
+.stamp-dot.on { position: relative; background: none; border-color: transparent; padding: 0; }
+.stamp-img {
+    display: block; width: 100%; height: 100%; max-width: none; object-fit: contain;
+    transform: rotate(var(--tilt, -4deg));
+    filter: drop-shadow(0 2px 3px rgba(155, 26, 54, 0.22));
+}
+.stamp-img.new { animation: stampThump 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+.stamp-dot.on:has(.stamp-img.new)::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    border: 2px solid #9b1a36; opacity: 0;
+    animation: stampRing 0.8s 0.35s ease-out both;
+}
+@keyframes stampThump {
+    0%   { transform: scale(2.2) rotate(var(--tilt, -4deg)); opacity: 0; }
+    60%  { transform: scale(0.92) rotate(var(--tilt, -4deg)); opacity: 1; }
+    100% { transform: scale(1) rotate(var(--tilt, -4deg)); opacity: 1; }
+}
+@keyframes stampRing {
+    0%   { transform: scale(0.85); opacity: 0.6; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+.stamp-dot.reward { color: var(--rose); }
+@media (prefers-reduced-motion: reduce) { .stamp-img.new, .stamp-dot.on::after { animation: none; } }

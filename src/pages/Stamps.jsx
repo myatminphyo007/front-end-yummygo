@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import api from "../api/axios"
 import { useLang } from "../context/LanguageContext"
+import TakoLoader from "../components/TakoLoader"
+import Icon from "../components/Icon"
 
 export default function Stamps() {
     const { t } = useLang()
@@ -19,7 +21,12 @@ export default function Stamps() {
             .finally(() => setLoading(false))
     }, [])
 
-    if (loading) return <div className="container">{t("stalls.loading")}</div>
+    if (loading)
+        return (
+            <div className="container">
+                <TakoLoader size={64} label={t("stalls.loading")} />
+            </div>
+        )
 
     return (
         <div className="container">
@@ -31,7 +38,9 @@ export default function Stamps() {
             <p className="muted">{t("stamps.subtitle")}</p>
 
             {/* free coupons */}
-            <h3 style={{ color: "var(--wine)", marginTop: 30 }}>🎁 {t("stamps.coupons")}</h3>
+            <h3 className="stamps-h">
+                <Icon name="gift" size={22} /> {t("stamps.coupons")}
+            </h3>
             {coupons.length === 0 ? (
                 <div className="empty">{t("stamps.noCoupons")}</div>
             ) : (
@@ -40,7 +49,7 @@ export default function Stamps() {
                         <strong>{c.shop?.name}</strong>
                         <div className="coupon-code">{c.code.replace(/^FREE-/, "")}</div>
                         <p style={{ margin: "0 0 4px" }}>
-                            🎁 {t("stamps.reward")}: <strong>{c.rewardName}</strong>
+                            <Icon name="gift" size={16} /> {t("stamps.reward")}: <strong>{c.rewardName}</strong>
                         </p>
                         <p className="muted" style={{ margin: 0 }}>{t("stamps.couponHint")}</p>
                     </div>
@@ -48,7 +57,9 @@ export default function Stamps() {
             )}
 
             {/* stamp cards in progress (one per stall) */}
-            <h3 style={{ color: "var(--wine)", marginTop: 30 }}>🏅 {t("stamps.title")}</h3>
+            <h3 className="stamps-h">
+                <Icon name="medal" size={22} /> {t("stamps.title")}
+            </h3>
             {cards.length === 0 ? (
                 <div className="empty">{t("stamps.noCards")}</div>
             ) : (
@@ -62,17 +73,32 @@ export default function Stamps() {
                         </div>
 
                         <div className="stamp-row">
-                            {Array.from({ length: c.stampsNeeded }, (_, i) => (
-                                <div key={i} className={`stamp-dot ${i < c.progress ? "on" : ""}`}>
-                                    {i < c.progress ? "🍡" : i + 1}
-                                </div>
-                            ))}
-                            <div className="stamp-dot reward">🎁</div>
+                            {Array.from({ length: c.stampsNeeded }, (_, i) => {
+                                const earned = i < c.progress
+                                const newest = earned && i === c.progress - 1
+                                return (
+                                    <div key={i} className={`stamp-dot ${earned ? "on" : ""}`}>
+                                        {earned ? (
+                                            <img
+                                                className={`stamp-img ${newest ? "new" : ""}`}
+                                                src="/stamp.png"
+                                                alt={t("stamps.title")}
+                                                style={{ "--tilt": `${((i * 7) % 9) - 4}deg` }}
+                                            />
+                                        ) : (
+                                            i + 1
+                                        )}
+                                    </div>
+                                )
+                            })}
+                            <div className="stamp-dot reward">
+                                <Icon name="gift" size={30} />
+                            </div>
                         </div>
 
                         {c.shop.rewardName && (
                             <p className="muted" style={{ margin: 0 }}>
-                                🎁 {t("stamps.reward")}: <strong>{c.shop.rewardName}</strong>
+                                <Icon name="gift" size={16} /> {t("stamps.reward")}: <strong>{c.shop.rewardName}</strong>
                             </p>
                         )}
                     </div>
