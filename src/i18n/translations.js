@@ -401,6 +401,18 @@ const translations = {
         "fav.empty": "No favorites yet. Tap the heart on a stall you like.",
         "fav.add": "Add to favorites",
         "fav.remove": "Remove from favorites",
+
+        "pf.edit": "Edit profile",
+        "pf.name": "Name",
+        "pf.changePhoto": "Change photo",
+        "pf.removePhoto": "Remove photo",
+        "pf.save": "Save",
+        "pf.saving": "Saving…",
+        "pf.cancel": "Cancel",
+        "pf.saved": "Profile updated",
+        "pf.nameEmpty": "Please enter a name",
+        "pf.notImage": "Please choose an image file",
+        "pf.failed": "Could not save. Please try again.",
     },
 
     ja: {
@@ -807,6 +819,17 @@ const translations = {
         "fav.empty": "まだお気に入りがありません。気に入った屋台のハートを押してね。",
         "fav.add": "お気に入りに追加",
         "fav.remove": "お気に入りから削除",
+        "pf.edit": "プロフィールを編集",
+        "pf.name": "名前",
+        "pf.changePhoto": "写真を変更",
+        "pf.removePhoto": "写真を削除",
+        "pf.save": "保存",
+        "pf.saving": "保存中…",
+        "pf.cancel": "キャンセル",
+        "pf.saved": "プロフィールを更新しました",
+        "pf.nameEmpty": "名前を入力してください",
+        "pf.notImage": "画像ファイルを選んでください",
+        "pf.failed": "保存できませんでした。もう一度お試しください。",
     },
 
     my: {
@@ -1211,6 +1234,18 @@ const translations = {
         "fav.empty": "မကြိုက်ထားသေးပါ။ ကြိုက်သောဆိုင်ရှိ နှလုံးကို နှိပ်ပါ။",
         "fav.add": "အကြိုက်ထဲထည့်ရန်",
         "fav.remove": "အကြိုက်မှဖယ်ရန်",
+
+        "pf.edit": "ပရိုဖိုင် ပြင်ရန်",
+        "pf.name": "အမည်",
+        "pf.changePhoto": "ဓာတ်ပုံ ပြောင်းရန်",
+        "pf.removePhoto": "ဓာတ်ပုံ ဖယ်ရန်",
+        "pf.save": "သိမ်းမည်",
+        "pf.saving": "သိမ်းနေသည်…",
+        "pf.cancel": "မလုပ်တော့ပါ",
+        "pf.saved": "ပရိုဖိုင် ပြင်ပြီးပါပြီ",
+        "pf.nameEmpty": "အမည် ထည့်ပါ",
+        "pf.notImage": "ပုံဖိုင် ရွေးပါ",
+        "pf.failed": "သိမ်း၍မရပါ။ ထပ်ကြိုးစားပါ။",
     },
 
     ko: {
@@ -1613,6 +1648,17 @@ const translations = {
         "fav.empty": "아직 즐겨찾기가 없어요. 마음에 드는 가게의 하트를 눌러보세요.",
         "fav.add": "즐겨찾기에 추가",
         "fav.remove": "즐겨찾기에서 삭제",
+        "pf.edit": "프로필 수정",
+        "pf.name": "이름",
+        "pf.changePhoto": "사진 변경",
+        "pf.removePhoto": "사진 삭제",
+        "pf.save": "저장",
+        "pf.saving": "저장 중…",
+        "pf.cancel": "취소",
+        "pf.saved": "프로필이 수정되었습니다",
+        "pf.nameEmpty": "이름을 입력하세요",
+        "pf.notImage": "이미지 파일을 선택하세요",
+        "pf.failed": "저장하지 못했습니다. 다시 시도해 주세요.",
     },
 }
 
