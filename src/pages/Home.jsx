@@ -49,7 +49,7 @@ export default function Home() {
     }
 
     const today = new Date().toLocaleDateString("sv-SE")
-    const solo = festivals.length === 1 // one festival: show one wide card
+    const solo = false // wide card turned off
 
     return (
         <>
