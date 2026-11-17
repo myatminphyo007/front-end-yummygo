@@ -1942,3 +1942,17 @@ body.scrolled header {
     margin-bottom: 12px !important;   /* 6px + 6px lost, given back */
     box-shadow: 0 6px 20px rgba(139, 30, 63, 0.12) !important;
 }
+
+
+/* keep button text visible on hover */
+.btn:not(.outline):not(.light):hover,
+.card:hover .btn:not(.outline):not(.light),
+a.btn:not(.outline):not(.light):hover {
+    color: #fff !important;
+}
+.btn.outline:hover,
+.btn.light:hover,
+.card:hover .btn.outline,
+.card:hover .btn.light {
+    color: var(--wine) !important;
+}
