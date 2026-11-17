@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import api from "../api/axios"
 import { useLang } from "../context/LanguageContext"
+import Icon from "../components/Icon"
+import TakoLoader from "../components/TakoLoader"
 
 // a simple bar chart made with plain HTML and CSS
 function BarChart({ data, labelKey }) {
@@ -20,6 +22,16 @@ function BarChart({ data, labelKey }) {
     )
 }
 
+// empty state with the mascot
+function Empty({ text }) {
+    return (
+        <div className="stats-empty">
+            <img src="/mascot.png" alt="" />
+            <p className="muted">{text}</p>
+        </div>
+    )
+}
+
 export default function Stats() {
     const { t } = useLang()
     const [stats, setStats] = useState(null)
@@ -33,7 +45,13 @@ export default function Stats() {
             .finally(() => setLoading(false))
     }, [])
 
-    if (loading) return <div className="container">{t("stalls.loading")}</div>
+    if (loading) {
+        return (
+            <div className="container">
+                <TakoLoader size={64} label={t("stalls.loading")} />
+            </div>
+        )
+    }
 
     if (!stats) {
         return (
@@ -49,7 +67,7 @@ export default function Stats() {
     return (
         <div className="container">
             <div className="section-title">
-                <h2>📊 {t("stats.title")}</h2>
+                <h2><Icon name="chart" size={26} /> {t("stats.title")}</h2>
                 <Link className="btn outline small" to="/owner">{t("ticket.back")}</Link>
             </div>
 
@@ -82,11 +100,11 @@ export default function Stats() {
                 </div>
                 <div className="stat">
                     <strong>{stats.stampRally ? stats.stampsGiven : "-"}</strong>
-                    <p>🏅 {t("stats.stamps")}</p>
+                    <p className="stat-label"><Icon name="medal" size={16} /> {t("stats.stamps")}</p>
                 </div>
                 <div className="stat">
                     <strong>{stats.stampRally ? stats.couponsMade : "-"}</strong>
-                    <p>🎁 {t("stats.couponsMade")}</p>
+                    <p className="stat-label"><Icon name="gift" size={16} /> {t("stats.couponsMade")}</p>
                 </div>
                 <div className="stat">
                     <strong>{stats.stampRally ? stats.couponsUsed : "-"}</strong>
@@ -107,7 +125,7 @@ export default function Stats() {
             <div className="panel">
                 <h3>{t("stats.perTime")}</h3>
                 {stats.byTime.length === 0 ? (
-                    <p className="muted">{t("stats.noData")}</p>
+                    <Empty text={t("stats.noData")} />
                 ) : (
                     <BarChart data={stats.byTime} labelKey="time" />
                 )}
@@ -132,9 +150,11 @@ export default function Stats() {
 
             {/* popular dishes */}
             <div className="panel">
-                <h3>🍡 {t("stats.dishes")}</h3>
+                <h3 className="stats-h3">
+                    <img className="stats-h3-img" src="/mascot.png" alt="" /> {t("stats.dishes")}
+                </h3>
                 {stats.dishes.length === 0 ? (
-                    <p className="muted">{t("stats.noDishes")}</p>
+                    <Empty text={t("stats.noDishes")} />
                 ) : (
                     stats.dishes.map((d, i) => (
                         <div key={d.name} className="menu-item">
