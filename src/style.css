@@ -1929,3 +1929,14 @@ footer.site-footer {
 .stats-empty p { margin: 0; }
 @keyframes statsBob { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(3deg); } }
 @media (prefers-reduced-motion: reduce) { .stats-empty img { animation: none; } }
+.navbar, header.navbar, nav.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--cream);          /* solid, no see-through */
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    transform: translateZ(0);          /* own layer, stops flicker */
+    will-change: transform;
+    backface-visibility: hidden;
+}
