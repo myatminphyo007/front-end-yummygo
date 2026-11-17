@@ -4,6 +4,7 @@ import api from "../api/axios"
 import { useAuth } from "../context/AuthContext"
 import { useLang } from "../context/LanguageContext"
 import StarRating from "../components/StarRating"
+import Icon from "../components/Icon"
 
 export default function Profile() {
     const { user, updateUser } = useAuth()
@@ -89,34 +90,35 @@ export default function Profile() {
     }
 
     // photo shown in the circle
-    const shownImage = editing ? (preview || (remove ? "" : user.profileImage)) : user.profileImage
+    const shownImage = editing ? preview || (remove ? "" : user.profileImage) : user.profileImage
+    const letter = (editing ? name : user.name)?.charAt(0).toUpperCase()
 
     return (
         <div className="container">
             {/* top card: same for everyone */}
-            <div className="panel" style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
-                <div
-                    style={{
-                        width: 110,
-                        height: 110,
-                        borderRadius: "50%",
-                        overflow: "hidden",
-                        background: "var(--pink)",
-                        display: "grid",
-                        placeItems: "center",
-                        fontSize: 48,
-                        flexShrink: 0,
-                    }}
-                >
-                    {shownImage ? (
-                        <img
-                            src={shownImage}
-                            alt={user.name}
-                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        />
-                    ) : (
-                        (editing ? name : user.name)?.charAt(0).toUpperCase()
+            <div className={`panel pe-card ${editing ? "editing" : ""}`}>
+                <div className="pe-avatar">
+                    <div className="pe-circle">
+                        {shownImage ? <img src={shownImage} alt={user.name} /> : letter}
+                    </div>
+                    {editing && (
+                        <button
+                            type="button"
+                            className="pe-cam"
+                            title={t("pf.changePhoto")}
+                            aria-label={t("pf.changePhoto")}
+                            onClick={() => fileRef.current?.click()}
+                        >
+                            <Icon name="camera" size={18} />
+                        </button>
                     )}
+                    <input
+                        ref={fileRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={pickFile}
+                        style={{ display: "none" }}
+                    />
                 </div>
 
                 {!editing ? (
@@ -126,52 +128,42 @@ export default function Profile() {
                         <span className="status approved" style={{ marginTop: 10 }}>
                             {t(`profile.role.${user.role}`)}
                         </span>
-                        <div style={{ marginTop: 14 }}>
-                            <button type="button" className="btn small outline" onClick={startEdit}>
-                                {t("pf.edit")}
+                        <div style={{ marginTop: 16 }}>
+                            <button type="button" className="pe-btn ghost small" onClick={startEdit}>
+                                <Icon name="edit" size={15} /> {t("pf.edit")}
                             </button>
-                            {saved && <span className="pf-ok">✓ {t("pf.saved")}</span>}
+                            {saved && <span className="pe-ok">✓ {t("pf.saved")}</span>}
                         </div>
                     </div>
                 ) : (
-                    <form className="pf-form" onSubmit={save}>
-                        <label>
-                            {t("pf.name")}
+                    <form className="pe-form" onSubmit={save}>
+                        <label className="pe-label" htmlFor="pe-name">{t("pf.name")}</label>
+                        <div className="pe-field">
                             <input
+                                id="pe-name"
                                 type="text"
                                 value={name}
                                 maxLength={40}
                                 onChange={(e) => setName(e.target.value)}
                                 autoFocus
                             />
-                        </label>
-
-                        <div className="pf-photo-row">
-                            <input
-                                ref={fileRef}
-                                type="file"
-                                accept="image/*"
-                                onChange={pickFile}
-                                style={{ display: "none" }}
-                            />
-                            <button type="button" className="btn small light" onClick={() => fileRef.current?.click()}>
-                                {t("pf.changePhoto")}
-                            </button>
-                            {(shownImage || file) && (
-                                <button type="button" className="btn small light" onClick={removePhoto}>
-                                    {t("pf.removePhoto")}
-                                </button>
-                            )}
+                            <span className="pe-count">{name.length}/40</span>
                         </div>
 
-                        {error && <p className="pf-error">{error}</p>}
+                        {shownImage && (
+                            <button type="button" className="pe-link" onClick={removePhoto}>
+                                {t("pf.removePhoto")}
+                            </button>
+                        )}
 
-                        <div className="pf-actions">
-                            <button className="btn small" type="submit" disabled={saving}>
+                        {error && <p className="pe-error">{error}</p>}
+
+                        <div className="pe-actions">
+                            <button className="pe-btn" type="submit" disabled={saving}>
                                 {saving ? t("pf.saving") : t("pf.save")}
                             </button>
                             <button
-                                className="btn small light"
+                                className="pe-btn ghost"
                                 type="button"
                                 onClick={() => setEditing(false)}
                                 disabled={saving}

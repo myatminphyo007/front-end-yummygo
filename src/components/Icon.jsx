@@ -29,6 +29,13 @@ const PATHS = {
     chart: <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />,
     calendar: <path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4" />,
     gift: <path d="M4 10h16v10H4zM3 7h18v3H3zM12 7v13M12 7C9 7 8 3.5 10 3.5S12 7 12 7zm0 0c3 0 4-3.5 2-3.5S12 7 12 7z" />,
+    camera: (
+        <>
+            <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+            <circle cx="12" cy="13" r="3.5" />
+        </>
+    ),
+    edit: <path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" />,
 }
 
 export default function Icon({ name, size = 20 }) {
