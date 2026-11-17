@@ -30,8 +30,9 @@ export default function Navbar() {
 
     return (
         <header className="navbar">
-            <Link className="logo" to="/">
-                🍡 Yummy <span>Go</span>
+            <Link className="logo" to="/" aria-label="Yummy Go">
+                <img className="logo-img" src="/logo.png" alt="Yummy Go" />
+                <img className="logo-mark" src="/mascot.png" alt="Yummy Go" />
             </Link>
 
             <nav>

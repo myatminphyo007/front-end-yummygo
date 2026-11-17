@@ -6,9 +6,7 @@ export default function Footer() {
 
     return (
         <footer className="site-footer">
-            <h2>
-                🍡 Yummy <span>Go</span>
-            </h2>
+            <img className="footer-logo" src="/logo.png" alt="Yummy Go" />
 
             <nav className="footer-links">
                 <Link to="/">{t("nav.home")}</Link>
