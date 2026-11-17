@@ -418,6 +418,14 @@ const translations = {
         "rv.photoHint": "Optional. Up to 3 photos.",
         "rv.photoLimit": "You can add up to 3 photos.",
         "rv.notImage": "Please choose image files only.",
+
+        "sc.title": "Four seasons of fun",
+        "sc.hint": "Tap a card to change the season.",
+        "sc.now": "Now",
+        "sc.spring": "Hanami picnic",
+        "sc.summer": "Fireworks and festivals",
+        "sc.autumn": "Roasted sweet potato",
+        "sc.winter": "A hot drink in the snow",
     },
 
     ja: {
@@ -840,6 +848,14 @@ const translations = {
         "rv.photoHint": "任意。最大3枚まで。",
         "rv.photoLimit": "写真は最大3枚までです。",
         "rv.notImage": "画像ファイルのみ選んでください。",
+
+        "sc.title": "四季を楽しもう",
+        "sc.hint": "カードをタップして季節を変えよう。",
+        "sc.now": "今",
+        "sc.spring": "お花見ピクニック",
+        "sc.summer": "花火とお祭り",
+        "sc.autumn": "焼き芋と紅葉",
+        "sc.winter": "雪景色とあったかい飲み物",
     },
 
     my: {
@@ -1260,6 +1276,13 @@ const translations = {
         "rv.photoHint": "ရွေးချယ်စရာ။ အများဆုံး ၃ ပုံ။",
         "rv.photoLimit": "ဓာတ်ပုံ ၃ ပုံအထိသာ ထည့်နိုင်ပါသည်။",
         "rv.notImage": "ပုံဖိုင်များကိုသာ ရွေးပါ။",
+        "sc.title": "ရာသီလေးခု ပျော်ရွှင်ကြစို့",
+        "sc.hint": "ကတ်ကို နှိပ်ပြီး ရာသီပြောင်းပါ။",
+        "sc.now": "ယခု",
+        "sc.spring": "ဆာကူရာ ပန်းကြည့်ပွဲ",
+        "sc.summer": "မီးရှူးမီးပန်းနှင့် ပွဲတော်",
+        "sc.autumn": "ကန်စွန်းဥကင်နှင့် ရွက်ဝါများ",
+        "sc.winter": "နှင်းထဲတွင် ပူနွေးသော သောက်စရာ",
     },
 
     ko: {
@@ -1678,6 +1701,14 @@ const translations = {
         "rv.photoHint": "선택 사항. 최대 3장.",
         "rv.photoLimit": "사진은 최대 3장까지 추가할 수 있어요.",
         "rv.notImage": "이미지 파일만 선택해 주세요.",
+
+        "sc.title": "사계절을 즐겨요",
+        "sc.hint": "카드를 눌러 계절을 바꿔보세요.",
+        "sc.now": "지금",
+        "sc.spring": "벚꽃 소풍",
+        "sc.summer": "불꽃놀이와 축제",
+        "sc.autumn": "군고구마와 단풍",
+        "sc.winter": "눈 속의 따뜻한 음료",
     },
 }
 

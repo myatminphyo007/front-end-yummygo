@@ -7,6 +7,7 @@ import { RING } from "../utils/season"
 import useSeason from "../utils/useSeason"
 import SkeletonGrid from "../components/Skeleton"
 import SeasonFX from "../components/SeasonFX"
+import SeasonCards from "../components/SeasonCards"
 import Lanterns from "../components/Lanterns"
 import Icon from "../components/Icon"
 
@@ -120,6 +121,8 @@ export default function Home() {
                             <p>{t("home.f4Text")}</p>
                         </div>
                     </div>
+
+                    <SeasonCards />
 
                     <Lanterns />
 
