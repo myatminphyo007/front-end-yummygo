@@ -1929,3 +1929,10 @@ footer.site-footer {
 .stats-empty p { margin: 0; }
 @keyframes statsBob { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(3deg); } }
 @media (prefers-reduced-motion: reduce) { .stats-empty img { animation: none; } }
+/* lock navbar height so it can't jitter */
+.navbar, header.navbar, nav.navbar {
+    height: 72px;
+    min-height: 72px;
+    transition: none;
+}
+.logo-img { height: 46px; width: auto; }
