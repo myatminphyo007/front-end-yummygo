@@ -1824,3 +1824,18 @@ footer.site-footer {
     .seasons-row { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; padding: 22px 6px 26px; }
     .sc-card { flex: 0 0 64%; scroll-snap-align: center; }
 }
+
+/* ===== season mascot in the middle of the hero ring ===== */
+.hero-ball.mascot {
+    background: #fff; overflow: hidden; border-radius: 50%;
+    border: 5px solid #fff; box-sizing: border-box;
+    box-shadow: 0 22px 50px color-mix(in srgb, var(--rose) 35%, transparent),
+                0 0 0 9px rgba(255, 255, 255, 0.45);
+}
+.hero-ball.mascot::before,
+.hero-ball.mascot::after { display: none; }
+.hero-ball.mascot img {
+    display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+    animation: mascotIn 0.6s ease;
+}
+@keyframes mascotIn { from { opacity: 0; transform: scale(1.12); } to { opacity: 1; transform: none; } }

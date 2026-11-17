@@ -11,6 +11,14 @@ import SeasonCards from "../components/SeasonCards"
 import Lanterns from "../components/Lanterns"
 import Icon from "../components/Icon"
 
+// where to crop each mascot picture so the face sits in the circle
+const MASCOT_POS = {
+    spring: "50% 16%",
+    summer: "50% 10%",
+    autumn: "50% 22%",
+    winter: "50% 14%",
+}
+
 export default function Home() {
     const navigate = useNavigate()
     const { t } = useLang()
@@ -79,9 +87,16 @@ export default function Home() {
                     </form>
                 </div>
 
-                {/* 3D animation */}
+                {/* 3D animation: the season mascot sits in the middle of the ring */}
                 <div className="hero-3d" aria-hidden="true">
-                    <div className="hero-ball"></div>
+                    <div className="hero-ball mascot">
+                        <img
+                            key={season}
+                            src={`/mascots/${season}.webp`}
+                            alt=""
+                            style={{ objectPosition: MASCOT_POS[season] }}
+                        />
+                    </div>
                     <div className="hero-ring">
                         {RING[season].map((e, i) => (
                             <div className="ring-item" key={i} style={{ "--a": `${i * 60}deg` }}>
