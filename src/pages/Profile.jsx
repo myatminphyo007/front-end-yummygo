@@ -32,6 +32,7 @@ export default function Profile() {
     const [pwSent, setPwSent] = useState(false)
     const [pwCode, setPwCode] = useState("")
     const [pwCur, setPwCur] = useState("")
+    const [pwForgot, setPwForgot] = useState(false) // forgot the current password
     const [pwNew, setPwNew] = useState("")
     const [pwNew2, setPwNew2] = useState("")
     const [pwBusy, setPwBusy] = useState(false)
@@ -115,6 +116,7 @@ export default function Profile() {
         setPwSent(false)
         setPwCode("")
         setPwCur("")
+        setPwForgot(false)
         setPwNew("")
         setPwNew2("")
         setPwErr("")
@@ -144,7 +146,8 @@ export default function Profile() {
         setPwBusy(true)
         try {
             await api.put("/auth/password", {
-                currentPassword: pwCur,
+                currentPassword: pwForgot ? "" : pwCur,
+                forgotCurrent: pwForgot,
                 code: pwCode.trim(),
                 newPassword: pwNew
             })
@@ -280,10 +283,15 @@ export default function Profile() {
                                 />
                                 <p className="muted pw-hint">{t("pw.codeHint")}</p>
 
-                                <label>
-                                    {t("pw.current")}
-                                    <input type="password" value={pwCur} onChange={(e) => setPwCur(e.target.value)} required />
-                                </label>
+                                {!pwForgot && (
+                                    <label>
+                                        {t("pw.current")}
+                                        <input type="password" value={pwCur} onChange={(e) => setPwCur(e.target.value)} required />
+                                    </label>
+                                )}
+                                <button type="button" className="link-btn" onClick={() => setPwForgot((v) => !v)}>
+                                    {pwForgot ? t("pw.haveCurrent") : t("pw.forgotCurrent")}
+                                </button>
                                 <label>
                                     {t("pw.newPass")}
                                     <input type="password" value={pwNew} onChange={(e) => setPwNew(e.target.value)} minLength={6} required />

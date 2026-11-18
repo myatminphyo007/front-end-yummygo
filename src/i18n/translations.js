@@ -453,6 +453,8 @@ const translations = {
         "pw.changeBtn": "Update password",
         "pw.changed": "Password updated",
         "pw.failed": "Something went wrong. Please try again.",
+        "pw.forgotCurrent": "I forgot my current password",
+        "pw.haveCurrent": "I remember my current password",
     },
 
     ja: {
@@ -910,6 +912,8 @@ const translations = {
         "pw.changeBtn": "パスワードを更新",
         "pw.changed": "パスワードを更新しました",
         "pw.failed": "エラーが発生しました。もう一度お試しください。",
+        "pw.forgotCurrent": "現在のパスワードを忘れた場合",
+        "pw.haveCurrent": "現在のパスワードを入力する",
     },
 
     my: {
@@ -1363,6 +1367,8 @@ const translations = {
         "pw.changeBtn": "စကားဝှက် ပြင်ဆင်ရန်",
         "pw.changed": "စကားဝှက် ပြင်ဆင်ပြီးပါပြီ",
         "pw.failed": "တစ်ခုခုမှားယွင်းသွားသည်။ ပြန်ကြိုးစားပါ။",
+        "pw.forgotCurrent": "လက်ရှိစကားဝှက်ကို မေ့သွားပါပြီ",
+        "pw.haveCurrent": "လက်ရှိစကားဝှက်ကို မှတ်မိပါသည်",
     },
 
     ko: {
@@ -1815,6 +1821,8 @@ const translations = {
         "pw.changeBtn": "비밀번호 업데이트",
         "pw.changed": "비밀번호가 업데이트되었습니다",
         "pw.failed": "문제가 발생했습니다. 다시 시도해 주세요.",
+        "pw.forgotCurrent": "현재 비밀번호를 잊어버렸어요",
+        "pw.haveCurrent": "현재 비밀번호가 기억나요",
     },
 }
 
