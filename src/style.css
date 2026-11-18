@@ -1982,3 +1982,31 @@ a.btn:not(.outline):not(.light):hover {
 .pw-panel .pw-form { max-width: 420px; }
 .pw-panel .pw-form .pw-code { margin-bottom: 0; }
 .pw-panel .pe-actions { margin: 12px 0 8px; }
+
+
+/* ===== install app pill ===== */
+.install-pill {
+    position: fixed; left: 18px; bottom: 18px; z-index: 1400;
+    display: flex; align-items: center; gap: 12px;
+    max-width: min(92vw, 380px); padding: 10px 12px 10px 12px;
+    background: #fff; border: 1px solid var(--border); border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(100, 25, 55, 0.2);
+    animation: installIn 0.4s ease-out;
+}
+.install-pill img { width: 44px; height: 44px; object-fit: contain; flex: none; }
+.install-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
+.install-text strong { color: var(--wine); }
+.install-text span { color: var(--muted); font-size: 13px; }
+.install-btn {
+    flex: none; border: 0; border-radius: 999px; padding: 9px 18px;
+    background: var(--rose); color: #fff; font-weight: 700;
+}
+.install-btn:hover { filter: brightness(0.95); }
+.install-x {
+    flex: none; width: 30px; height: 30px; border: 0; border-radius: 50%;
+    background: transparent; color: var(--muted); font-size: 22px; line-height: 1;
+}
+.install-x:hover { background: var(--blush); }
+@keyframes installIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@media (max-width: 600px) { .install-pill { left: 12px; right: 12px; bottom: 12px; max-width: none; } }
+@media (prefers-reduced-motion: reduce) { .install-pill { animation: none; } }

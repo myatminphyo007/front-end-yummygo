@@ -455,6 +455,9 @@ const translations = {
         "pw.failed": "Something went wrong. Please try again.",
         "pw.forgotCurrent": "I forgot my current password",
         "pw.haveCurrent": "I remember my current password",
+        "pwa.install": "Install Yummy Go",
+        "pwa.installBtn": "Install",
+        "pwa.iosHint": "Tap Share, then “Add to Home Screen”",
     },
 
     ja: {
@@ -914,6 +917,9 @@ const translations = {
         "pw.failed": "エラーが発生しました。もう一度お試しください。",
         "pw.forgotCurrent": "現在のパスワードを忘れた場合",
         "pw.haveCurrent": "現在のパスワードを入力する",
+        "pwa.install": "Yummy Go をインストール",
+        "pwa.installBtn": "インストール",
+        "pwa.iosHint": "共有ボタン →「ホーム画面に追加」をタップ",
     },
 
     my: {
@@ -1369,6 +1375,9 @@ const translations = {
         "pw.failed": "တစ်ခုခုမှားယွင်းသွားသည်။ ပြန်ကြိုးစားပါ။",
         "pw.forgotCurrent": "လက်ရှိစကားဝှက်ကို မေ့သွားပါပြီ",
         "pw.haveCurrent": "လက်ရှိစကားဝှက်ကို မှတ်မိပါသည်",
+        "pwa.install": "Yummy Go ကို ထည့်သွင်းရန်",
+        "pwa.installBtn": "ထည့်သွင်းမည်",
+        "pwa.iosHint": "Share ကိုနှိပ်ပြီး “Add to Home Screen” ကို ရွေးပါ",
     },
 
     ko: {
@@ -1823,6 +1832,9 @@ const translations = {
         "pw.failed": "문제가 발생했습니다. 다시 시도해 주세요.",
         "pw.forgotCurrent": "현재 비밀번호를 잊어버렸어요",
         "pw.haveCurrent": "현재 비밀번호가 기억나요",
+        "pwa.install": "Yummy Go 설치하기",
+        "pwa.installBtn": "설치",
+        "pwa.iosHint": "공유 버튼 → “홈 화면에 추가”를 누르세요",
     },
 }
 
