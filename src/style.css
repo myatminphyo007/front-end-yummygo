@@ -1956,3 +1956,29 @@ a.btn:not(.outline):not(.light):hover {
 .card:hover .btn.light {
     color: var(--wine) !important;
 }
+
+
+/* ===== password and email code pages ===== */
+.pw-forgot { margin: -6px 0 14px; text-align: right; }
+.pw-forgot a { color: var(--rose); font-weight: 700; font-size: 14px; }
+.pw-forgot a:hover { text-decoration: underline; }
+
+.pw-info { margin: 0 0 14px; color: var(--text); }
+.pw-hint { margin: 6px 0 16px; font-size: 13px; text-align: center; }
+
+.pw-code {
+    display: block; width: 100%; padding: 14px 10px; margin: 6px 0;
+    text-align: center; font-size: 30px; font-weight: 800; letter-spacing: 10px;
+    color: var(--wine); background: var(--blush);
+    border: 2px solid var(--border); border-radius: 14px;
+}
+.pw-code:focus { border-color: var(--rose); }
+.pw-code::placeholder { color: color-mix(in srgb, var(--rose) 45%, transparent); letter-spacing: 10px; }
+
+.pw-links { display: flex; justify-content: space-between; gap: 12px; margin: 14px 0 4px; }
+.pw-links .link-btn { margin: 0; }
+.link-btn:disabled { color: var(--muted); cursor: default; text-decoration: none; }
+
+.pw-panel .pw-form { max-width: 420px; }
+.pw-panel .pw-form .pw-code { margin-bottom: 0; }
+.pw-panel .pe-actions { margin: 12px 0 8px; }

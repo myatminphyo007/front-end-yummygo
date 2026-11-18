@@ -10,6 +10,7 @@ import Stalls from "./pages/Stalls"
 import ShopDetail from "./pages/ShopDetail"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
+import ForgotPassword from "./pages/ForgotPassword"
 import MyReservations from "./pages/MyReservations"
 import Stamps from "./pages/Stamps"
 import Profile from "./pages/Profile"
@@ -36,6 +37,7 @@ export default function App() {
                     <Route path="/favorites" element={<Favorites />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/forgot" element={<ForgotPassword />} />
 
                     <Route
                         path="/profile"

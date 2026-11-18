@@ -3,12 +3,16 @@ import { Link } from "react-router-dom"
 import api from "../api/axios"
 import { useAuth } from "../context/AuthContext"
 import { useLang } from "../context/LanguageContext"
+import { useToast } from "../context/ToastContext"
 import StarRating from "../components/StarRating"
 import Icon from "../components/Icon"
 
 export default function Profile() {
     const { user, updateUser } = useAuth()
-    const { t } = useLang()
+    const ctx = useLang()
+    const { t } = ctx
+    const lang = ctx.lang || ctx.language || ctx.locale || "en"
+    const { showToast } = useToast()
     const [shop, setShop] = useState(null)
     const [reservations, setReservations] = useState([])
 
@@ -22,6 +26,23 @@ export default function Profile() {
     const [error, setError] = useState("")
     const [saved, setSaved] = useState(false)
     const fileRef = useRef(null)
+
+    // change password (needs a code sent to my email)
+    const [pwOpen, setPwOpen] = useState(false)
+    const [pwSent, setPwSent] = useState(false)
+    const [pwCode, setPwCode] = useState("")
+    const [pwCur, setPwCur] = useState("")
+    const [pwNew, setPwNew] = useState("")
+    const [pwNew2, setPwNew2] = useState("")
+    const [pwBusy, setPwBusy] = useState(false)
+    const [pwErr, setPwErr] = useState("")
+    const [pwWait, setPwWait] = useState(0)
+
+    useEffect(() => {
+        if (pwWait <= 0) return
+        const id = setTimeout(() => setPwWait((w) => w - 1), 1000)
+        return () => clearTimeout(id)
+    }, [pwWait])
 
     useEffect(() => {
         if (user.role === "owner") {
@@ -86,6 +107,53 @@ export default function Profile() {
             setError(err.response?.data?.message || t("pf.failed"))
         } finally {
             setSaving(false)
+        }
+    }
+
+    const closePw = () => {
+        setPwOpen(false)
+        setPwSent(false)
+        setPwCode("")
+        setPwCur("")
+        setPwNew("")
+        setPwNew2("")
+        setPwErr("")
+    }
+
+    const sendPwCode = async () => {
+        setPwErr("")
+        setPwBusy(true)
+        try {
+            await api.post("/auth/password/send-code", { lang })
+            setPwSent(true)
+            setPwWait(60)
+        } catch (err) {
+            setPwErr(err.response?.data?.message || t("pw.failed"))
+        } finally {
+            setPwBusy(false)
+        }
+    }
+
+    const changePw = async (e) => {
+        e.preventDefault()
+        setPwErr("")
+        if (pwCode.trim().length !== 6) return setPwErr(t("pw.enterCode"))
+        if (pwNew.length < 6) return setPwErr(t("pw.tooShort"))
+        if (pwNew !== pwNew2) return setPwErr(t("pw.mismatch"))
+
+        setPwBusy(true)
+        try {
+            await api.put("/auth/password", {
+                currentPassword: pwCur,
+                code: pwCode.trim(),
+                newPassword: pwNew
+            })
+            showToast(t("pw.changed"))
+            closePw()
+        } catch (err) {
+            setPwErr(err.response?.data?.message || t("pw.failed"))
+        } finally {
+            setPwBusy(false)
         }
     }
 
@@ -171,6 +239,73 @@ export default function Profile() {
                                 {t("pf.cancel")}
                             </button>
                         </div>
+                    </form>
+                )}
+            </div>
+
+            {/* change password: all roles */}
+            <div className="panel pw-panel">
+                <h2>{t("pw.change")}</h2>
+                {!pwOpen ? (
+                    <button type="button" className="pe-btn ghost small" onClick={() => setPwOpen(true)}>
+                        {t("pw.change")}
+                    </button>
+                ) : (
+                    <form onSubmit={changePw} className="pw-form">
+                        {pwErr && <p className="error-text">{pwErr}</p>}
+
+                        {!pwSent ? (
+                            <>
+                                <p className="muted">{t("pw.codeSent", { email: user.email })}</p>
+                                <div className="pe-actions">
+                                    <button type="button" className="pe-btn" onClick={sendPwCode} disabled={pwBusy}>
+                                        {pwBusy ? t("pw.sending") : t("pw.sendMyCode")}
+                                    </button>
+                                    <button type="button" className="pe-btn ghost" onClick={closePw}>
+                                        {t("pf.cancel")}
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <input
+                                    className="pw-code"
+                                    value={pwCode}
+                                    onChange={(e) => setPwCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                                    inputMode="numeric"
+                                    autoComplete="one-time-code"
+                                    placeholder="••••••"
+                                    aria-label={t("pw.code")}
+                                    autoFocus
+                                />
+                                <p className="muted pw-hint">{t("pw.codeHint")}</p>
+
+                                <label>
+                                    {t("pw.current")}
+                                    <input type="password" value={pwCur} onChange={(e) => setPwCur(e.target.value)} required />
+                                </label>
+                                <label>
+                                    {t("pw.newPass")}
+                                    <input type="password" value={pwNew} onChange={(e) => setPwNew(e.target.value)} minLength={6} required />
+                                </label>
+                                <label>
+                                    {t("pw.confirmPass")}
+                                    <input type="password" value={pwNew2} onChange={(e) => setPwNew2(e.target.value)} minLength={6} required />
+                                </label>
+
+                                <div className="pe-actions">
+                                    <button className="pe-btn" type="submit" disabled={pwBusy}>
+                                        {pwBusy ? t("pw.sending") : t("pw.changeBtn")}
+                                    </button>
+                                    <button type="button" className="pe-btn ghost" onClick={closePw} disabled={pwBusy}>
+                                        {t("pf.cancel")}
+                                    </button>
+                                </div>
+                                <button type="button" className="link-btn" onClick={sendPwCode} disabled={pwWait > 0 || pwBusy}>
+                                    {pwWait > 0 ? t("pw.resendIn", { s: pwWait }) : t("pw.resend")}
+                                </button>
+                            </>
+                        )}
                     </form>
                 )}
             </div>

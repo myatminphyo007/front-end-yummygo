@@ -43,6 +43,10 @@ export default function Login() {
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </label>
 
+            <div className="pw-forgot">
+                <Link to="/forgot">{t("pw.forgot")}</Link>
+            </div>
+
             <button className="btn" type="submit">{t("auth.login")}</button>
             <p>
                 {t("auth.noAccount")} <Link to="/register">{t("auth.register")}</Link>
