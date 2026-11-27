@@ -2063,3 +2063,5 @@ a.btn:not(.outline):not(.light):hover {
 
 /* on the shop detail page the badge sits in the text, not on a picture */
 .crowd-badge.inline { position: static; display: inline-flex; font-size: 13px; }
+/* back button row */
+.back-row { margin: 0 0 14px; }
