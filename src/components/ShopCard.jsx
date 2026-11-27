@@ -2,12 +2,16 @@ import { Link } from "react-router-dom"
 import { useLang } from "../context/LanguageContext"
 import mapLink from "../utils/mapLink"
 import { festivalRange, isEnded } from "../utils/festivalDates"
+import useCrowd from "../utils/useCrowd"
 import StarRating from "./StarRating"
 import FavButton from "./FavButton"
+import CrowdMeter from "./CrowdMeter"
 import Icon from "./Icon"
 
 export default function ShopCard({ shop }) {
     const { t } = useLang()
+    const crowd = useCrowd()
+    const info = crowd[shop._id]
     const range = festivalRange(shop.festival)
     const ended = isEnded(shop.festival)
 
@@ -16,6 +20,7 @@ export default function ShopCard({ shop }) {
             <div className="card-image">
                 {shop.image ? <img src={shop.image} alt={shop.name} /> : "🍡"}
                 <FavButton id={shop._id} />
+                <CrowdMeter level={info?.level || "quiet"} date={info?.date} />
             </div>
 
             <div className="card-body">

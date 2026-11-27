@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom"
 import api from "../api/axios"
 import { useLang } from "../context/LanguageContext"
 import ShopCard from "../components/ShopCard"
-import CrowdMeter from "../components/CrowdMeter"
 
 export default function Stalls() {
     const { t } = useLang()
@@ -15,22 +14,9 @@ export default function Stalls() {
     const [category, setCategory] = useState("ALL")
     const [search, setSearch] = useState(params.get("search") || "")
     const [loading, setLoading] = useState(true)
-    const [crowd, setCrowd] = useState({})
 
     useEffect(() => {
         api.get("/festivals").then((res) => setFestivals(res.data))
-    }, [])
-
-    // crowd levels: load now, then refresh every minute
-    useEffect(() => {
-        const load = () =>
-            api
-                .get("/crowd")
-                .then((res) => setCrowd(res.data))
-                .catch(() => {})
-        load()
-        const timer = setInterval(load, 60000)
-        return () => clearInterval(timer)
     }, [])
 
     useEffect(() => {
@@ -97,10 +83,7 @@ export default function Stalls() {
             ) : (
                 <div className="grid">
                     {visible.map((shop) => (
-                        <div className="crowd-wrap" key={shop._id}>
-                            <ShopCard shop={shop} />
-                            <CrowdMeter level={crowd[shop._id]?.level || "quiet"} />
-                        </div>
+                        <ShopCard key={shop._id} shop={shop} />
                     ))}
                 </div>
             )}
