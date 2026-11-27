@@ -335,14 +335,9 @@ export default function ShopDetail() {
                                     <div className="review-head">
                                         <span className="review-who">
                                             <Avatar src={petLooks[r.user?._id]?.profileImage} name={r.user?.name} size={48} />
-                                            <span className="review-name">
+                                            <span className="review-nameline">
                                                 <strong>{r.user?.name}</strong>
-                                                {petLooks[r.user?._id] && (
-                                                    <span className="pet-chip">
-                                                        <PetFace look={petLooks[r.user._id]} size={24} />
-                                                        {petLooks[r.user._id].name || t("pet.title")}
-                                                    </span>
-                                                )}
+                                                {petLooks[r.user?._id] && <PetFace look={petLooks[r.user._id]} size={30} />}
                                             </span>
                                         </span>
                                         <span className="stars">

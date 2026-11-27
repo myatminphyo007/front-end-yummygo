@@ -2210,3 +2210,4 @@
     font-size: 13px; color: var(--wine);
 }
 .pet-chip .pet-face-img { box-shadow: none; }
+.review-nameline { display: flex; align-items: center; gap: 8px; }
