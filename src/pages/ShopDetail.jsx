@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import api from "../api/axios"
 import { useAuth } from "../context/AuthContext"
@@ -55,24 +55,25 @@ export default function ShopDetail() {
 
     const isCustomer = user?.role === "customer"
 
-    const loadAll = async () => {
-        const [s, m, sl, r] = await Promise.all([
+    const loadAll = useCallback(() => {
+        return Promise.all([
             api.get(`/shops/${id}`),
             api.get(`/menu/shop/${id}`),
             api.get(`/slots/shop/${id}`),
             api.get(`/reviews/shop/${id}`),
-        ])
-        setShop(s.data)
-        setMenu(m.data)
-        setSlots(sl.data)
-        setReviews(r.data)
-    }
+        ]).then(([shopResponse, menuResponse, slotsResponse, reviewsResponse]) => {
+            setShop(shopResponse.data)
+            setMenu(menuResponse.data)
+            setSlots(slotsResponse.data)
+            setReviews(reviewsResponse.data)
+        })
+    }, [id])
 
     useEffect(() => {
         loadAll()
             .catch(() => setShop(null))
             .finally(() => setLoading(false))
-    }, [id])
+    }, [loadAll])
 
     const changeQty = (itemId, delta) => {
         setCart((prev) => {
