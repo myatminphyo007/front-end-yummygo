@@ -2010,3 +2010,56 @@ a.btn:not(.outline):not(.light):hover {
 @keyframes installIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 @media (max-width: 600px) { .install-pill { left: 12px; right: 12px; bottom: 12px; max-width: none; } }
 @media (prefers-reduced-motion: reduce) { .install-pill { animation: none; } }
+
+
+/* ---------- crowd meter ---------- */
+.crowd-wrap { position: relative; display: flex; }
+.crowd-wrap > :first-child { flex: 1; min-width: 0; }
+
+.crowd-badge {
+    position: absolute; top: 10px; left: 10px; z-index: 3;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px 4px 5px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1.5px solid var(--c, #3aa76d);
+    border-radius: 999px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    font-size: 12px; font-weight: 700; color: var(--c, #3aa76d);
+    pointer-events: none;
+}
+.crowd-quiet  { --c: #2f9e62; }
+.crowd-normal { --c: #d98a00; }
+.crowd-busy   { --c: #d6343f; }
+
+.crowd-face { position: relative; width: 26px; height: 26px; flex: none; }
+.crowd-face img {
+    width: 100%; height: 100%; object-fit: contain; border-radius: 50%;
+    background: #fff; animation: crowdBob 2.4s ease-in-out infinite;
+}
+.crowd-normal .crowd-face img { animation-duration: 1.4s; }
+.crowd-busy .crowd-face img { animation: crowdShake 0.45s ease-in-out infinite; }
+.crowd-sweat {
+    position: absolute; top: -4px; right: -5px; width: 9px; height: 12px;
+    fill: #55b9f3; stroke: #fff; stroke-width: 1;
+    animation: crowdDrip 1.2s ease-in infinite;
+}
+
+.crowd-bars { display: inline-flex; gap: 2px; align-items: flex-end; }
+.crowd-bars i {
+    display: block; width: 4px; border-radius: 2px; background: #ddd;
+}
+.crowd-bars i:nth-child(1) { height: 6px; }
+.crowd-bars i:nth-child(2) { height: 9px; }
+.crowd-bars i:nth-child(3) { height: 12px; }
+.crowd-bars i.on { background: var(--c); }
+
+@keyframes crowdBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes crowdShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-1.5px); } 75% { transform: translateX(1.5px); } }
+@keyframes crowdDrip { 0% { opacity: 0; transform: translateY(-3px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(5px); } }
+
+@media (prefers-reduced-motion: reduce) {
+    .crowd-face img, .crowd-sweat { animation: none !important; }
+}
+
+/* on the shop detail page the badge sits in the text, not on a picture */
+.crowd-badge.inline { position: static; display: inline-flex; font-size: 13px; }

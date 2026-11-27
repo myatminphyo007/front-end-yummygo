@@ -458,6 +458,11 @@ const translations = {
         "pwa.install": "Install Yummy Go",
         "pwa.installBtn": "Install",
         "pwa.iosHint": "Tap Share, then “Add to Home Screen”",
+        "crowd.title": "How busy it is today",
+        "crowd.quiet": "Quiet",
+        "crowd.normal": "Normal",
+        "crowd.busy": "Busy",
+ 
     },
 
     ja: {
@@ -920,6 +925,10 @@ const translations = {
         "pwa.install": "Yummy Go をインストール",
         "pwa.installBtn": "インストール",
         "pwa.iosHint": "共有ボタン →「ホーム画面に追加」をタップ",
+        "crowd.title": "今日の混み具合",
+        "crowd.quiet": "空いている",
+        "crowd.normal": "ふつう",
+        "crowd.busy": "混雑",
     },
 
     my: {
@@ -1378,6 +1387,10 @@ const translations = {
         "pwa.install": "Yummy Go ကို ထည့်သွင်းရန်",
         "pwa.installBtn": "ထည့်သွင်းမည်",
         "pwa.iosHint": "Share ကိုနှိပ်ပြီး “Add to Home Screen” ကို ရွေးပါ",
+        "crowd.title": "ယနေ့ လူစည်ကားမှု",
+        "crowd.quiet": "လူရှင်း",
+        "crowd.normal": "ပုံမှန်",
+        "crowd.busy": "လူများ", 
     },
 
     ko: {
@@ -1835,6 +1848,10 @@ const translations = {
         "pwa.install": "Yummy Go 설치하기",
         "pwa.installBtn": "설치",
         "pwa.iosHint": "공유 버튼 → “홈 화면에 추가”를 누르세요",
+        "crowd.title": "오늘의 혼잡도",
+        "crowd.quiet": "한산",
+        "crowd.normal": "보통",
+        "crowd.busy": "혼잡",
     },
 }
 

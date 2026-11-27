@@ -7,6 +7,7 @@ import { useLang } from "../context/LanguageContext"
 import StarRating from "../components/StarRating"
 import TakoLoader from "../components/TakoLoader"
 import Icon from "../components/Icon"
+import CrowdMeter from "../components/CrowdMeter"
 import mapLink from "../utils/mapLink"
 import { dateOnly, festivalRange, isEnded } from "../utils/festivalDates"
 
@@ -23,6 +24,7 @@ export default function ShopDetail() {
     const [slots, setSlots] = useState([])
     const [reviews, setReviews] = useState([])
     const [loading, setLoading] = useState(true)
+    const [crowdLevel, setCrowdLevel] = useState("quiet")
 
     // reservation form
     const [mode, setMode] = useState("slot")
@@ -69,6 +71,18 @@ export default function ShopDetail() {
         loadAll()
             .catch(() => setShop(null))
             .finally(() => setLoading(false))
+    }, [id])
+
+    // how busy this stall is today (refreshes every minute)
+    useEffect(() => {
+        const load = () =>
+            api
+                .get("/crowd")
+                .then((res) => setCrowdLevel(res.data[id]?.level || "quiet"))
+                .catch(() => {})
+        load()
+        const timer = setInterval(load, 60000)
+        return () => clearInterval(timer)
     }, [id])
 
     const changeQty = (itemId, delta) => {
@@ -216,6 +230,10 @@ export default function ShopDetail() {
                         <p className="muted">
                             {shop.category} · {shop.festival?.name} ({shop.festival?.place})
                         </p>
+
+                        <div style={{ margin: "0 0 10px" }}>
+                            <CrowdMeter level={crowdLevel} inline />
+                        </div>
 
                         {range && (
                             <p className="muted" style={{ margin: "0 0 8px" }}>
