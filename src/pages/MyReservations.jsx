@@ -5,6 +5,7 @@ import api from "../api/axios"
 import { useToast } from "../context/ToastContext"
 import { useLang } from "../context/LanguageContext"
 import TakoLoader from "../components/TakoLoader"
+import PetFace from "../components/PetFace"
 
 const ACTIVE = ["pending", "approved", "offered"]
 
@@ -45,6 +46,7 @@ export default function MyReservations() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
     const [openQr, setOpenQr] = useState(null)
+    const [pet, setPet] = useState(null) // my own mascot, shown on every ticket
 
     const load = () =>
         api
@@ -55,6 +57,7 @@ export default function MyReservations() {
 
     useEffect(() => {
         load()
+        api.get("/pet").then((res) => setPet(res.data)).catch(() => {})
     }, [])
 
     const handleCancel = async (id) => {
@@ -214,6 +217,13 @@ export default function MyReservations() {
 
                             {/* tear-off stub */}
                             <div className="ticket-side">
+                                {pet && r.code && (
+                                    <div className="ticket-pet">
+                                        <PetFace look={pet} size={58} />
+                                        {pet.name && <small>{pet.name}</small>}
+                                    </div>
+                                )}
+
                                 {r.code && (
                                     <>
                                         <span className="ticket-label">{t("res.code")}</span>

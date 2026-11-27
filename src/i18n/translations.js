@@ -509,6 +509,11 @@ const translations = {
         "pet.goal.witch": "Reserve with a food pre-order",
         "pet.goal.santa": "Fill a stamp card and get a free coupon",
         "pet.goal.kimono": "Make {n} reservations",
+        "pet.say.sleepy": "Zzz... I'm sleepy. Take me to a stall!",
+        "pet.say.happy": "I'm so happy! Let's go again!",
+        "pet.mood.happy": "Happy",
+        "pet.mood.sleepy": "Sleepy",
+        "pet.visitorPet": "Visitor's mascot",
     },
 
     ja: {
@@ -1049,6 +1054,11 @@ const translations = {
         "pet.goal.witch": "料理を事前注文して予約しよう",
         "pet.goal.santa": "スタンプカードをうめて無料クーポンをもらおう",
         "pet.goal.kimono": "{n} 回予約しよう",
+        "pet.say.sleepy": "ねむいよ…お店につれていって！",
+        "pet.say.happy": "うれしい！また行こうね！",
+        "pet.mood.happy": "ごきげん",
+        "pet.mood.sleepy": "ねむねむ",
+        "pet.visitorPet": "お客様のマスコット",
 
     },
 
@@ -1586,6 +1596,11 @@ const translations = {
         "pet.goal.witch": "စားစရာ ကြိုမှာ၍ ကြိုတင်မှာယူပါ",
         "pet.goal.santa": "စတမ့်ကတ် ပြည့်၍ ဖရီးကူပွန် ရယူပါ",
         "pet.goal.kimono": "ကြိုတင်မှာယူမှု {n} ကြိမ် လုပ်ပါ",
+        "pet.say.sleepy": "Zzz... အိပ်ငိုက်နေပြီ။ ဆိုင်ကို ခေါ်သွားပါ!",
+        "pet.say.happy": "ပျော်လိုက်တာ! ထပ်သွားရအောင်!",
+        "pet.mood.happy": "ပျော်နေသည်",
+        "pet.mood.sleepy": "အိပ်ငိုက်နေသည်",
+        "pet.visitorPet": "ဧည့်သည်၏ mascot",
     },
 
     ko: {
@@ -2121,6 +2136,11 @@ const translations = {
         "pet.goal.witch": "음식을 미리 주문하고 예약하기",
         "pet.goal.santa": "스탬프 카드를 채워 무료 쿠폰 받기",
         "pet.goal.kimono": "예약 {n}번 하기",
+        "pet.say.sleepy": "쿨쿨... 졸려요. 가게에 데려가 주세요!",
+        "pet.say.happy": "너무 기뻐요! 또 가요!",
+        "pet.mood.happy": "기분 좋음",
+        "pet.mood.sleepy": "졸림",
+        "pet.visitorPet": "방문자의 마스코트",
     },
 }
 

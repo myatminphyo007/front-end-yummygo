@@ -7,10 +7,10 @@ import { useLang } from "../context/LanguageContext"
 import StarRating from "../components/StarRating"
 import TakoLoader from "../components/TakoLoader"
 import Icon from "../components/Icon"
-import CrowdMeter from "../components/CrowdMeter"
-import BackButton from "../components/BackButton"
 import mapLink from "../utils/mapLink"
 import { dateOnly, festivalRange, isEnded } from "../utils/festivalDates"
+import PetFace from "../components/PetFace"
+import usePetLooks from "../utils/usePetLooks"
 
 const MAX_REVIEW_PHOTOS = 3
 
@@ -24,8 +24,8 @@ export default function ShopDetail() {
     const [menu, setMenu] = useState([])
     const [slots, setSlots] = useState([])
     const [reviews, setReviews] = useState([])
+    const petLooks = usePetLooks(reviews.map((r) => r.user?._id))
     const [loading, setLoading] = useState(true)
-    const [crowdInfo, setCrowdInfo] = useState(null)
 
     // reservation form
     const [mode, setMode] = useState("slot")
@@ -72,18 +72,6 @@ export default function ShopDetail() {
         loadAll()
             .catch(() => setShop(null))
             .finally(() => setLoading(false))
-    }, [id])
-
-    // how busy this stall is today (refreshes every minute)
-    useEffect(() => {
-        const load = () =>
-            api
-                .get("/crowd")
-                .then((res) => setCrowdInfo(res.data[id] || null))
-                .catch(() => {})
-        load()
-        const timer = setInterval(load, 60000)
-        return () => clearInterval(timer)
     }, [id])
 
     const changeQty = (itemId, delta) => {
@@ -219,10 +207,6 @@ export default function ShopDetail() {
 
     return (
         <div className="container">
-            <div className="back-row">
-                <BackButton />
-            </div>
-
             <div className="detail-layout">
                 {/* left column */}
                 <div>
@@ -235,10 +219,6 @@ export default function ShopDetail() {
                         <p className="muted">
                             {shop.category} · {shop.festival?.name} ({shop.festival?.place})
                         </p>
-
-                        <div style={{ margin: "0 0 10px" }}>
-                            <CrowdMeter level={crowdInfo?.level || "quiet"} date={crowdInfo?.date} inline />
-                        </div>
 
                         {range && (
                             <p className="muted" style={{ margin: "0 0 8px" }}>
@@ -353,7 +333,10 @@ export default function ShopDetail() {
                             reviews.map((r) => (
                                 <div key={r._id} className="review">
                                     <div className="review-head">
-                                        <strong>{r.user?.name}</strong>
+                                        <span className="review-who">
+                                            {petLooks[r.user?._id] && <PetFace look={petLooks[r.user._id]} size={36} />}
+                                            <strong>{r.user?.name}</strong>
+                                        </span>
                                         <span className="stars">
                                             {"★".repeat(r.rating)}
                                             {"☆".repeat(5 - r.rating)}

@@ -5,49 +5,8 @@ import { useAuth } from "../context/AuthContext"
 import { useLang } from "../context/LanguageContext"
 import { useToast } from "../context/ToastContext"
 
-const SEASONS = ["spring", "summer", "autumn", "winter"]
-
-// the plain adult boy. Change this to "/pet/adult-boy.webp" when that picture is ready
-const ADULT_BOY = "/mascot.png"
-
-// where to crop the old season pictures so the face sits in the round thumbnail
-const FACE_POS = {
-    spring: "50% 16%",
-    summer: "50% 10%",
-    autumn: "50% 22%",
-    winter: "50% 14%",
-}
-
-const adultSrc = (gender) => (gender === "girl" ? "/pet/adult-girl.webp" : ADULT_BOY)
-
-// the season boys are the first pictures you made (/mascots), everything else is in /pet
-const outfitSrc = (key, gender) => {
-    const g = gender === "girl" ? "girl" : "boy"
-    if (SEASONS.includes(key) && g === "boy") return `/mascots/${key}.webp`
-    return `/pet/${key}-${g}.webp`
-}
-
-const thumbPos = (key, gender) =>
-    SEASONS.includes(key) && gender !== "girl" ? FACE_POS[key] : "50% 30%"
-
-// the picture that shows the mascot right now
-const artSrc = (pet, withOutfit = true) => {
-    if (withOutfit && pet.outfit) return outfitSrc(pet.outfit, pet.gender)
-    if (pet.stage === "adult") return adultSrc(pet.gender)
-    return `/pet/${pet.stage}.webp`
-}
-
-function Pic({ src, pos = "50% 30%" }) {
-    const logo = src === ADULT_BOY
-    return (
-        <img
-            className={`pet-pic ${logo ? "logo" : ""}`}
-            src={src}
-            alt=""
-            style={logo ? undefined : { objectPosition: pos }}
-        />
-    )
-}
+import PetFace, { Pic } from "./PetFace"
+import { adultSrc, artSrc, outfitSrc, thumbPos } from "../utils/petArt"
 
 function Lock() {
     return (
@@ -169,7 +128,9 @@ export default function MascotPet({ compact = false }) {
 
     /* ---------- full card (stamp page) ---------- */
     const asking = !pet.name || renaming
-    const sayKey = isAdult ? `pet.say.adult.${pet.gender || "boy"}` : `pet.say.${pet.stage}`
+    let sayKey = isAdult ? `pet.say.adult.${pet.gender || "boy"}` : `pet.say.${pet.stage}`
+    if (pet.mood === "sleepy") sayKey = "pet.say.sleepy"
+    if (pet.mood === "happy") sayKey = "pet.say.happy"
     const popup = queue[0]
 
     return (
@@ -180,8 +141,10 @@ export default function MascotPet({ compact = false }) {
             </div>
 
             <div className="pet-stage">
-                <div className="pet-art">
+                <div className={`pet-art ${pet.mood === "sleepy" ? "sleepy" : ""} ${pet.mood === "happy" ? "happy" : ""}`}>
                     <Pic src={artSrc(pet)} />
+                    {pet.mood === "sleepy" && <b className="pet-zzz" aria-hidden="true">Z z z</b>}
+                    {pet.mood === "happy" && <b className="pet-spark" aria-hidden="true">✦ ✦</b>}
                 </div>
 
                 <div className="pet-info">
@@ -206,6 +169,9 @@ export default function MascotPet({ compact = false }) {
                             <div className="pet-name-row">
                                 <strong className="pet-name">{pet.name}</strong>
                                 <span className="pet-badge">{stageName(pet.stage)}</span>
+                                {pet.mood !== "normal" && (
+                                    <span className={`pet-badge mood-${pet.mood}`}>{t(`pet.mood.${pet.mood}`)}</span>
+                                )}
                                 <button type="button" className="link-btn" onClick={() => setRenaming(true)}>
                                     {t("pet.rename")}
                                 </button>

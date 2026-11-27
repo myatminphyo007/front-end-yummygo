@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom"
 import api from "../api/axios"
 import { useToast } from "../context/ToastContext"
 import { useLang } from "../context/LanguageContext"
+import PetFace from "../components/PetFace"
+import usePetLooks from "../utils/usePetLooks"
 
 export default function Ticket() {
     const { code } = useParams()
@@ -10,6 +12,8 @@ export default function Ticket() {
     const { t } = useLang()
     const [reservation, setReservation] = useState(null)
     const [loading, setLoading] = useState(true)
+    const looks = usePetLooks([reservation?.user?._id])
+    const look = looks[reservation?.user?._id]
 
     const load = () =>
         api
@@ -55,9 +59,19 @@ export default function Ticket() {
                     <p>
                         <strong>{t("ticket.visitor")}:</strong> {reservation.user?.name}
                     </p>
+                    {look && (
+                        <div className="visitor-pet">
+                            <PetFace look={look} size={64} />
+                            <div>
+                                <small className="muted">{t("pet.visitorPet")}</small>
+                                <br />
+                                <strong>{look.name || "-"}</strong>
+                            </div>
+                        </div>
+                    )}
                     <p>
                         <strong>{t("req.datetime")}:</strong>{" "}
-                                                {reservation.date
+                        {reservation.date
                             ? `${reservation.date} ${reservation.time}`
                             : reservation.slot
                               ? `${reservation.slot.date} ${reservation.slot.time}`
