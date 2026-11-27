@@ -36,3 +36,33 @@ export default function PetFace({ look, size = 40 }) {
         </span>
     )
 }
+
+// the visitor's own profile photo (a round letter if there is none)
+export function Avatar({ src, name = "", size = 36 }) {
+    return (
+        <span className="avatar-sm" style={{ width: size, height: size, fontSize: size * 0.45 }}>
+            {src ? <img src={src} alt="" /> : (name.trim()[0] || "?").toUpperCase()}
+        </span>
+    )
+}
+
+// the person's own profile photo, with their mascot as a little sticker on the corner
+export function PersonAvatar({ look, name = "", size = 46 }) {
+    const badge = Math.round(size * 0.62)
+    return (
+        <span className="person-avatar" style={{ width: size, height: size }}>
+            <span className="person-photo">
+                {look?.profileImage ? (
+                    <img src={look.profileImage} alt="" />
+                ) : (
+                    <b>{(name || "?").trim().charAt(0).toUpperCase()}</b>
+                )}
+            </span>
+            {look && look.stage && (
+                <span className="person-pet">
+                    <PetFace look={look} size={badge} />
+                </span>
+            )}
+        </span>
+    )
+}

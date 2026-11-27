@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom"
 import api from "../api/axios"
 import { useToast } from "../context/ToastContext"
 import { useLang } from "../context/LanguageContext"
-import PetFace from "../components/PetFace"
+import { PersonAvatar } from "../components/PetFace"
 import usePetLooks from "../utils/usePetLooks"
 
 export default function Ticket() {
@@ -61,7 +61,7 @@ export default function Ticket() {
                     </p>
                     {look && (
                         <div className="visitor-pet">
-                            <PetFace look={look} size={64} />
+                            <PersonAvatar look={look} name={reservation.user?.name} size={64} />
                             <div>
                                 <small className="muted">{t("pet.visitorPet")}</small>
                                 <br />
