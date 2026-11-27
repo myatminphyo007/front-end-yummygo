@@ -4,6 +4,7 @@ import api from "../api/axios"
 import { useLang } from "../context/LanguageContext"
 import TakoLoader from "../components/TakoLoader"
 import Icon from "../components/Icon"
+import MascotPet from "../components/MascotPet"
 
 export default function Stamps() {
     const { t } = useLang()
@@ -36,6 +37,9 @@ export default function Stamps() {
             </div>
 
             <p className="muted">{t("stamps.subtitle")}</p>
+
+            {/* my growing mascot */}
+            <MascotPet />
 
             {/* free coupons */}
             <h3 className="stamps-h">
