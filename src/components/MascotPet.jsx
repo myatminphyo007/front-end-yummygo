@@ -5,7 +5,12 @@ import { useAuth } from "../context/AuthContext"
 import { useLang } from "../context/LanguageContext"
 import { useToast } from "../context/ToastContext"
 
-// where to crop each season picture so the face sits in the circle
+const SEASONS = ["spring", "summer", "autumn", "winter"]
+
+// the plain adult boy. Change this to "/pet/adult-boy.webp" when that picture is ready
+const ADULT_BOY = "/mascot.png"
+
+// where to crop the old season pictures so the face sits in the round thumbnail
 const FACE_POS = {
     spring: "50% 16%",
     summer: "50% 10%",
@@ -13,33 +18,34 @@ const FACE_POS = {
     winter: "50% 14%",
 }
 
-function Egg() {
-    return (
-        <svg className="pet-egg" viewBox="0 0 120 120" aria-hidden="true">
-            <ellipse cx="60" cy="108" rx="26" ry="4" fill="#000" opacity="0.08" />
-            <ellipse cx="60" cy="66" rx="30" ry="40" fill="#FAEEDA" stroke="#EF9F27" strokeWidth="2.5" />
-            <circle cx="48" cy="52" r="5" fill="#F5C4B3" />
-            <circle cx="72" cy="70" r="6" fill="#F5C4B3" />
-            <circle cx="52" cy="86" r="4" fill="#F5C4B3" />
-            <circle cx="70" cy="46" r="3.5" fill="#F5C4B3" />
-        </svg>
-    )
+const adultSrc = (gender) => (gender === "girl" ? "/pet/adult-girl.webp" : ADULT_BOY)
+
+// the season boys are the first pictures you made (/mascots), everything else is in /pet
+const outfitSrc = (key, gender) => {
+    const g = gender === "girl" ? "girl" : "boy"
+    if (SEASONS.includes(key) && g === "boy") return `/mascots/${key}.webp`
+    return `/pet/${key}-${g}.webp`
 }
 
-function Baby() {
+const thumbPos = (key, gender) =>
+    SEASONS.includes(key) && gender !== "girl" ? FACE_POS[key] : "50% 30%"
+
+// the picture that shows the mascot right now
+const artSrc = (pet, withOutfit = true) => {
+    if (withOutfit && pet.outfit) return outfitSrc(pet.outfit, pet.gender)
+    if (pet.stage === "adult") return adultSrc(pet.gender)
+    return `/pet/${pet.stage}.webp`
+}
+
+function Pic({ src, pos = "50% 30%" }) {
+    const logo = src === ADULT_BOY
     return (
-        <div className="pet-baby">
-            <img src="/mascot.png" alt="" />
-            <svg viewBox="0 0 116 46" aria-hidden="true">
-                <path
-                    d="M4 6 L17 16 L30 4 L43 16 L56 4 L69 16 L82 4 L95 16 L112 6 L108 28 Q58 56 8 28 Z"
-                    fill="#FAEEDA"
-                    stroke="#EF9F27"
-                    strokeWidth="2.5"
-                    strokeLinejoin="round"
-                />
-            </svg>
-        </div>
+        <img
+            className={`pet-pic ${logo ? "logo" : ""}`}
+            src={src}
+            alt=""
+            style={logo ? undefined : { objectPosition: pos }}
+        />
     )
 }
 
@@ -52,16 +58,6 @@ function Lock() {
     )
 }
 
-// the picture of the mascot for its stage (or its outfit)
-function PetArt({ pet }) {
-    if (pet.outfit) {
-        return <img className="pet-outfit-img" src={`/mascots/${pet.outfit}.webp`} alt="" />
-    }
-    if (pet.stage === "egg") return <Egg />
-    if (pet.stage === "baby") return <Baby />
-    return <img className={`pet-grow pet-${pet.stage}`} src="/mascot.png" alt="" />
-}
-
 export default function MascotPet({ compact = false }) {
     const { user } = useAuth()
     const { t } = useLang()
@@ -71,7 +67,7 @@ export default function MascotPet({ compact = false }) {
     const [nameInput, setNameInput] = useState("")
     const [renaming, setRenaming] = useState(false)
     const [saving, setSaving] = useState(false)
-    const [grew, setGrew] = useState("")
+    const [queue, setQueue] = useState([]) // celebrations waiting to be shown
 
     useEffect(() => {
         api.get("/pet")
@@ -80,12 +76,30 @@ export default function MascotPet({ compact = false }) {
                 setPet(p)
                 setNameInput(p.name)
 
-                // celebrate when the mascot reached a new stage since the last visit
+                // the small card on the home page never uses up the celebrations
+                if (compact) return
+
                 try {
-                    const key = `yg-pet-stage-${user?._id || user?.id || "me"}`
-                    const seen = localStorage.getItem(key)
-                    if (seen !== null && p.stageIndex > Number(seen)) setGrew(p.stage)
-                    localStorage.setItem(key, String(p.stageIndex))
+                    const id = user?._id || user?.id || "me"
+                    const stageKey = `yg-pet-stage-${id}`
+                    const outfitKey = `yg-pet-outfits-${id}`
+                    const list = []
+
+                    const seenStage = localStorage.getItem(stageKey)
+                    if (seenStage !== null && p.stageIndex > Number(seenStage)) {
+                        list.push({ kind: "stage" })
+                    }
+
+                    const seenOutfits = JSON.parse(localStorage.getItem(outfitKey) || "null")
+                    if (Array.isArray(seenOutfits)) {
+                        p.unlockedKeys
+                            .filter((k) => !seenOutfits.includes(k))
+                            .forEach((k) => list.push({ kind: "outfit", key: k }))
+                    }
+
+                    localStorage.setItem(stageKey, String(p.stageIndex))
+                    localStorage.setItem(outfitKey, JSON.stringify(p.unlockedKeys))
+                    setQueue(list)
                 } catch {
                     /* private mode: no celebration */
                 }
@@ -96,7 +110,10 @@ export default function MascotPet({ compact = false }) {
     if (!pet) return null
 
     const stageName = (key) => t(`pet.stage.${key}`)
-    const petName = pet.name || t("pet.title")
+    const isAdult = pet.stage === "adult"
+    const needsChoice = isAdult && !pet.gender
+    const canWear = isAdult && !!pet.gender
+    const unlockedCount = pet.unlockedKeys.length
 
     const save = async (body, okText) => {
         setSaving(true)
@@ -119,16 +136,16 @@ export default function MascotPet({ compact = false }) {
         save({ name: nameInput }, t("pet.saved"))
     }
 
-    // progress to the next goal
-    let goalText = t("pet.maxed")
-    let percent = 100
+    // progress: to the next stage, and after that, outfits collected
+    let goalText
+    let percent
     if (pet.next) {
         const left = pet.next.at - pet.stamps
         percent = Math.max(4, Math.min(100, Math.round((pet.stamps / pet.next.at) * 100)))
-        goalText =
-            pet.next.type === "stage"
-                ? t("pet.nextStage", { n: left, stage: stageName(pet.next.key) })
-                : t("pet.nextOutfit", { n: left, outfit: t(`pet.o.${pet.next.key}`) })
+        goalText = t("pet.nextStage", { n: left, stage: stageName(pet.next.key) })
+    } else {
+        percent = Math.max(4, Math.round((unlockedCount / pet.outfits.length) * 100))
+        goalText = t("pet.collected", { n: unlockedCount, total: pet.outfits.length })
     }
 
     /* ---------- small card (home page) ---------- */
@@ -136,12 +153,12 @@ export default function MascotPet({ compact = false }) {
         return (
             <Link to="/stamps" className="pet-mini">
                 <div className="pet-mini-art">
-                    <PetArt pet={pet} />
+                    <Pic src={artSrc(pet)} />
                 </div>
                 <div className="pet-mini-body">
                     <strong>{pet.name || t("pet.nameAsk")}</strong>
                     <span className="muted">
-                        {stageName(pet.stage)} · {t("pet.stamps", { n: pet.stamps })}
+                        {needsChoice ? t("pet.chooseTitle") : `${stageName(pet.stage)} · ${t("pet.stamps", { n: pet.stamps })}`}
                     </span>
                     <div className="pet-bar"><i style={{ width: `${percent}%` }} /></div>
                 </div>
@@ -152,6 +169,8 @@ export default function MascotPet({ compact = false }) {
 
     /* ---------- full card (stamp page) ---------- */
     const asking = !pet.name || renaming
+    const sayKey = isAdult ? `pet.say.adult.${pet.gender || "boy"}` : `pet.say.${pet.stage}`
+    const popup = queue[0]
 
     return (
         <div className="panel pet-card">
@@ -161,8 +180,8 @@ export default function MascotPet({ compact = false }) {
             </div>
 
             <div className="pet-stage">
-                <div className={`pet-art ${pet.outfit ? "has-outfit" : ""}`}>
-                    <PetArt pet={pet} />
+                <div className="pet-art">
+                    <Pic src={artSrc(pet)} />
                 </div>
 
                 <div className="pet-info">
@@ -191,14 +210,53 @@ export default function MascotPet({ compact = false }) {
                                     {t("pet.rename")}
                                 </button>
                             </div>
-                            <div className="pet-say">{t(`pet.say.${pet.stage}`, { name: pet.name })}</div>
+                            <div className="pet-say">{t(sayKey, { name: pet.name })}</div>
                         </>
                     )}
 
                     <div className="pet-goal">{goalText}</div>
                     <div className="pet-bar"><i style={{ width: `${percent}%` }} /></div>
+
+                    {/* boy or girl: can be changed any time once grown up */}
+                    {isAdult && pet.gender && (
+                        <div className="pet-seg" role="group">
+                            {["boy", "girl"].map((g) => (
+                                <button
+                                    key={g}
+                                    type="button"
+                                    className={pet.gender === g ? "on" : ""}
+                                    aria-pressed={pet.gender === g}
+                                    onClick={() => pet.gender !== g && save({ gender: g })}
+                                >
+                                    {t(`pet.${g}`)}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
+
+            {/* grown up: boy or girl? */}
+            {needsChoice && (
+                <div className="pet-choose">
+                    <strong>{t("pet.chooseTitle")}</strong>
+                    <p className="muted">{t("pet.chooseHint")}</p>
+                    <div className="pet-choose-row">
+                        {["boy", "girl"].map((g) => (
+                            <button
+                                key={g}
+                                type="button"
+                                className="pet-choice"
+                                disabled={saving}
+                                onClick={() => save({ gender: g })}
+                            >
+                                <span className="pet-choice-img"><Pic src={adultSrc(g)} /></span>
+                                <strong>{t(`pet.${g}`)}</strong>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <div className="pet-wardrobe">
                 <strong>{t("pet.wardrobe")}</strong>
@@ -209,42 +267,51 @@ export default function MascotPet({ compact = false }) {
                         onClick={() => pet.outfit !== "" && save({ outfit: "" })}
                         aria-pressed={pet.outfit === ""}
                     >
-                        <span className="pet-o-img plain">
-                            <img src="/mascot.png" alt="" />
+                        <span className="pet-o-img">
+                            <Pic src={artSrc(pet, false)} />
                         </span>
                         <small>{t("pet.plain")}</small>
                     </button>
 
                     {pet.outfits.map((o) => {
-                        const open = pet.unlocked.includes(o.key)
                         const on = pet.outfit === o.key
                         return (
                             <button
                                 key={o.key}
                                 type="button"
-                                className={`pet-o ${on ? "on" : ""} ${open ? "" : "locked"}`}
-                                onClick={() => open && !on && save({ outfit: o.key })}
+                                className={`pet-o ${on ? "on" : ""} ${o.unlocked ? "" : "locked"}`}
+                                onClick={() => o.unlocked && canWear && !on && save({ outfit: o.key })}
                                 aria-pressed={on}
                             >
                                 <span className="pet-o-img">
-                                    <img
-                                        src={`/mascots/${o.key}.webp`}
-                                        alt=""
-                                        style={{ objectPosition: FACE_POS[o.key] }}
+                                    <Pic
+                                        src={outfitSrc(o.key, pet.gender)}
+                                        pos={thumbPos(o.key, pet.gender)}
                                     />
-                                    {!open && <Lock />}
+                                    {!o.unlocked && <Lock />}
                                 </span>
                                 <small>{t(`pet.o.${o.key}`)}</small>
-                                {!open && <small className="muted">{t("pet.locked", { n: o.from })}</small>}
+                                {o.unlocked ? (
+                                    !canWear && (
+                                        <small className="muted">
+                                            {isAdult ? t("pet.chooseTitle") : t("pet.needAdult")}
+                                        </small>
+                                    )
+                                ) : (
+                                    <>
+                                        <small className="muted">{t(`pet.goal.${o.key}`, { n: o.need })}</small>
+                                        <small className="pet-prog">{o.have} / {o.need}</small>
+                                    </>
+                                )}
                             </button>
                         )
                     })}
                 </div>
             </div>
 
-            {/* growth celebration */}
-            {grew && (
-                <div className="success-overlay" onClick={() => setGrew("")}>
+            {/* celebration: the mascot grew, or a new outfit was unlocked */}
+            {popup && (
+                <div className="success-overlay" onClick={() => setQueue((q) => q.slice(1))}>
                     <div className="success-card" onClick={(e) => e.stopPropagation()}>
                         <div className="confetti" aria-hidden="true">
                             {Array.from({ length: 16 }).map((_, i) => (
@@ -252,11 +319,18 @@ export default function MascotPet({ compact = false }) {
                             ))}
                         </div>
                         <div className="pet-art pet-pop">
-                            <PetArt pet={{ ...pet, outfit: "" }} />
+                            <Pic
+                                src={popup.kind === "outfit" ? outfitSrc(popup.key, pet.gender) : artSrc(pet, false)}
+                                pos={popup.kind === "outfit" ? thumbPos(popup.key, pet.gender) : undefined}
+                            />
                         </div>
-                        <h2>{t("pet.grew", { name: petName, stage: stageName(grew) })}</h2>
+                        <h2>
+                            {popup.kind === "outfit"
+                                ? t("pet.newOutfit", { outfit: t(`pet.o.${popup.key}`) })
+                                : t("pet.grew", { name: pet.name || t("pet.title"), stage: stageName(pet.stage) })}
+                        </h2>
                         <div className="card-actions" style={{ justifyContent: "center", marginTop: 14 }}>
-                            <button className="btn" type="button" onClick={() => setGrew("")}>
+                            <button className="btn" type="button" onClick={() => setQueue((q) => q.slice(1))}>
                                 {t("success.close")}
                             </button>
                         </div>
