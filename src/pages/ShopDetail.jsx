@@ -9,7 +9,7 @@ import TakoLoader from "../components/TakoLoader"
 import Icon from "../components/Icon"
 import mapLink from "../utils/mapLink"
 import { dateOnly, festivalRange, isEnded } from "../utils/festivalDates"
-import { PersonAvatar } from "../components/PetFace"
+import PetFace, { Avatar } from "../components/PetFace"
 import usePetLooks from "../utils/usePetLooks"
 
 const MAX_REVIEW_PHOTOS = 3
@@ -334,8 +334,16 @@ export default function ShopDetail() {
                                 <div key={r._id} className="review">
                                     <div className="review-head">
                                         <span className="review-who">
-                                            <PersonAvatar look={petLooks[r.user?._id]} name={r.user?.name} size={46} />
-                                            <strong>{r.user?.name}</strong>
+                                            <Avatar src={petLooks[r.user?._id]?.profileImage} name={r.user?.name} size={48} />
+                                            <span className="review-name">
+                                                <strong>{r.user?.name}</strong>
+                                                {petLooks[r.user?._id] && (
+                                                    <span className="pet-chip">
+                                                        <PetFace look={petLooks[r.user._id]} size={24} />
+                                                        {petLooks[r.user._id].name || t("pet.title")}
+                                                    </span>
+                                                )}
+                                            </span>
                                         </span>
                                         <span className="stars">
                                             {"★".repeat(r.rating)}
