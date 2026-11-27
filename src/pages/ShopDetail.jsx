@@ -8,6 +8,7 @@ import StarRating from "../components/StarRating"
 import TakoLoader from "../components/TakoLoader"
 import Icon from "../components/Icon"
 import CrowdMeter from "../components/CrowdMeter"
+import BackButton from "../components/BackButton"
 import mapLink from "../utils/mapLink"
 import { dateOnly, festivalRange, isEnded } from "../utils/festivalDates"
 
@@ -24,7 +25,7 @@ export default function ShopDetail() {
     const [slots, setSlots] = useState([])
     const [reviews, setReviews] = useState([])
     const [loading, setLoading] = useState(true)
-    const [crowdLevel, setCrowdLevel] = useState("quiet")
+    const [crowdInfo, setCrowdInfo] = useState(null)
 
     // reservation form
     const [mode, setMode] = useState("slot")
@@ -78,7 +79,7 @@ export default function ShopDetail() {
         const load = () =>
             api
                 .get("/crowd")
-                .then((res) => setCrowdLevel(res.data[id]?.level || "quiet"))
+                .then((res) => setCrowdInfo(res.data[id] || null))
                 .catch(() => {})
         load()
         const timer = setInterval(load, 60000)
@@ -218,6 +219,10 @@ export default function ShopDetail() {
 
     return (
         <div className="container">
+            <div className="back-row">
+                <BackButton />
+            </div>
+
             <div className="detail-layout">
                 {/* left column */}
                 <div>
@@ -232,7 +237,7 @@ export default function ShopDetail() {
                         </p>
 
                         <div style={{ margin: "0 0 10px" }}>
-                            <CrowdMeter level={crowdLevel} inline />
+                            <CrowdMeter level={crowdInfo?.level || "quiet"} date={crowdInfo?.date} inline />
                         </div>
 
                         {range && (

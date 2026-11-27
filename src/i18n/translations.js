@@ -462,6 +462,7 @@ const translations = {
         "crowd.quiet": "Quiet",
         "crowd.normal": "Normal",
         "crowd.busy": "Busy",
+        "common.back": "Back",
  
     },
 
@@ -929,6 +930,7 @@ const translations = {
         "crowd.quiet": "空いている",
         "crowd.normal": "ふつう",
         "crowd.busy": "混雑",
+        "common.back": "戻る",
     },
 
     my: {
@@ -1391,6 +1393,7 @@ const translations = {
         "crowd.quiet": "လူရှင်း",
         "crowd.normal": "ပုံမှန်",
         "crowd.busy": "လူများ", 
+        "common.back": "နောက်သို့",
     },
 
     ko: {
@@ -1852,6 +1855,7 @@ const translations = {
         "crowd.quiet": "한산",
         "crowd.normal": "보통",
         "crowd.busy": "혼잡",
+        "common.back": "뒤로",
     },
 }
 
