@@ -1532,21 +1532,6 @@
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--rose) 22%, transparent);
   }
 
-  /* Keep the home search button red in every season. */
-  .hero-search .btn[type="submit"] {
-      background: #c6283f;
-      border-color: #c6283f;
-      color: #fff;
-  }
-  .hero-search .btn[type="submit"]:hover {
-      background: #a61e33;
-      border-color: #a61e33;
-  }
-  .hero-search .btn[type="submit"]:focus-visible {
-      outline: 3px solid #9d2444;
-      outline-offset: 3px;
-  }
-
   /* ===== polish: one spacing scale ===== */
   .grid { gap: 22px; }
   .panel { padding: 22px; border-radius: 18px; }
