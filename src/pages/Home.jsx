@@ -9,8 +9,6 @@ import SkeletonGrid from "../components/Skeleton"
 import SeasonFX from "../components/SeasonFX"
 import Lanterns from "../components/Lanterns"
 import Icon from "../components/Icon"
-import MascotPet from "../components/MascotPet"
-import { useAuth } from "../context/AuthContext"
 
 // where to crop each mascot picture so the face sits in the circle
 const MASCOT_POS = {
@@ -24,7 +22,6 @@ export default function Home() {
     const navigate = useNavigate()
     const { t } = useLang()
     const { season } = useSeason()
-    const { user } = useAuth()
     const [search, setSearch] = useState("")
     const [festivals, setFestivals] = useState([])
     const [counts, setCounts] = useState({})
@@ -116,8 +113,6 @@ export default function Home() {
                 <span className="blob b3" aria-hidden="true"></span>
 
                 <div className="container">
-                    {user?.role === "customer" && <MascotPet compact />}
-
                     <div className="features">
                         <div className="feature">
                             <div className="emoji">🍢</div>
